@@ -1,0 +1,183 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap');
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 10% 8%;
+    --foreground: 210 10% 92%;
+    --card: 220 10% 10%;
+    --card-foreground: 210 10% 92%;
+    --popover: 220 10% 12%;
+    --popover-foreground: 210 10% 92%;
+    --primary: 210 60% 60%;
+    --primary-foreground: 210 10% 98%;
+    --secondary: 220 10% 15%;
+    --secondary-foreground: 210 10% 92%;
+    --muted: 220 10% 16%;
+    --muted-foreground: 210 10% 60%;
+    --accent: 210 50% 30%;
+    --accent-foreground: 210 10% 92%;
+    --destructive: 0 62.8% 50.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 220 10% 18%;
+    --input: 220 10% 18%;
+    --ring: 210 60% 50%; 
+    --radius: 0.5rem;
+    --chart-1: 210 60% 60%;
+    --chart-2: 220 50% 50%;
+    --chart-3: 240 50% 60%;
+    --chart-4: 260 50% 60%;
+    --chart-5: 280 50% 60%;
+
+    --sidebar-background: 220 10% 8%;
+    --sidebar-foreground: 210 10% 92%;
+    --sidebar-primary: 210 60% 60%;
+    --sidebar-primary-foreground: 210 10% 98%;
+    --sidebar-accent: 220 10% 15%;
+    --sidebar-accent-foreground: 210 10% 92%;
+    --sidebar-border: 220 10% 18%;
+    --sidebar-ring: 210 60% 50%;
+
+    /* Timer state colors */
+    --timer-focus: 210 60% 60%;
+    --timer-short-break: 142 60% 40%;
+    --timer-long-break: 187 60% 45%;
+  }
+
+  .dark {
+    --background: 220 10% 8%;
+    --foreground: 210 10% 92%;
+    --card: 220 10% 10%;
+    --card-foreground: 210 10% 92%;
+    --popover: 220 10% 12%;
+    --popover-foreground: 210 10% 92%;
+    --primary: 210 60% 60%;
+    --primary-foreground: 210 10% 98%;
+    --secondary: 220 10% 15%;
+    --secondary-foreground: 210 10% 92%;
+    --muted: 220 10% 16%;
+    --muted-foreground: 210 10% 60%;
+    --accent: 210 50% 30%;
+    --accent-foreground: 210 10% 92%;
+    --destructive: 0 62.8% 50.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 220 10% 18%;
+    --input: 220 10% 18%;
+    --ring: 210 60% 50%;
+    --chart-1: 210 60% 60%;
+    --chart-2: 220 50% 50%;
+    --chart-3: 240 50% 60%;
+    --chart-4: 260 50% 60%;
+    --chart-5: 280 50% 60%;
+    --sidebar-background: 220 10% 8%;
+    --sidebar-foreground: 210 10% 92%;
+    --sidebar-primary: 210 60% 60%;
+    --sidebar-primary-foreground: 210 10% 98%;
+    --sidebar-accent: 220 10% 15%;
+    --sidebar-accent-foreground: 210 10% 92%;
+    --sidebar-border: 220 10% 18%;
+    --sidebar-ring: 210 60% 50%;
+
+    /* Timer state colors */
+    --timer-focus: 210 60% 60%;
+    --timer-short-break: 142 60% 40%;
+    --timer-long-break: 187 60% 45%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "ss01", "ss02", "cv01", "cv02", "cv03";
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+}
+
+@layer utilities {
+  .glass-card {
+    @apply backdrop-blur-lg bg-black/40 border border-white/10 shadow-lg;
+  }
+  
+  .timer-focus-theme {
+    --timer-bg: hsl(var(--timer-focus) / 0.1);
+    --timer-border: hsl(var(--timer-focus) / 0.2);
+    --timer-text: hsl(var(--timer-focus));
+  }
+  
+  .timer-short-break-theme {
+    --timer-bg: hsl(var(--timer-short-break) / 0.1);
+    --timer-border: hsl(var(--timer-short-break) / 0.2);
+    --timer-text: hsl(var(--timer-short-break));
+  }
+  
+  .timer-long-break-theme {
+    --timer-bg: hsl(var(--timer-long-break) / 0.1);
+    --timer-border: hsl(var(--timer-long-break) / 0.2);
+    --timer-text: hsl(var(--timer-long-break));
+  }
+}
+
+.circular-progress {
+  transform: rotate(-90deg);
+}
+
+.circular-progress circle {
+  transition: stroke-dashoffset 0.3s ease;
+}
+
+/* Transition styles */
+.page-transition-enter {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.page-transition-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.page-transition-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-transition-exit-active {
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: opacity 300ms, transform 300ms;
+}
+
+/* Smooth animations */
+.timer-container {
+  transition: background-color 0.5s ease, border-color 0.5s ease;
+}
+
+.timer-text {
+  transition: color 0.5s ease;
+}
+
+/* Button effects */
+.button-hover-effect {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.button-hover-effect:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.button-active-effect:active {
+  transform: translateY(1px);
+}
