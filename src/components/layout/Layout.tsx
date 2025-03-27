@@ -1,7 +1,6 @@
-
 import React, { Suspense, useEffect } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import { Settings, Info,  House, Brain, Target, BookOpen } from 'lucide-react';
+import { Settings, Info, House, Brain, Target, BookOpen } from 'lucide-react';
 import { PageLoader } from '@/App';
 
 const Layout: React.FC = () => {
@@ -11,9 +10,8 @@ const Layout: React.FC = () => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
 
-
   const NavLinks = () => (
-    <>
+    <nav className="flex items-center md:gap-2 md:space-x-1 max-md:justify-between max-md:w-full">
       <Link 
         to="/"
         className={`p-2 border border-dashed flex items-center gap-2 transition-colors ${
@@ -51,7 +49,8 @@ const Layout: React.FC = () => {
             ? 'bg-primary/10 text-primary font-medium' 
             : 'hover:bg-secondary/80'
         }`}
-      ><Target className='size-5' />
+      >
+        <Target className='size-5' />
       </Link>
       <Link 
         to="/settings"
@@ -73,33 +72,33 @@ const Layout: React.FC = () => {
       >
         <Info className='size-5' />
       </Link>
-    </>
+    </nav>
   );
 
   return (
-    <div className='w-full'> 
-      <div className=" max-w-3xl mx-auto flex flex-col bg-background transition-colors duration-300">
-      <header className="w-full px-2 py-4 flex justify-between items-center border-b border-dashed border-border/40 backdrop-blur-sm bg-background/80 sticky top-0 z-10">
-        <div className="flex items-center">
-          { (
-            <div className="flex items-center space-x-1">
-              <NavLinks />
-            </div>
-          )}
+    <div className="min-h-screen flex flex-col">
+      {/* Desktop Navbar */}
+      <header className="hidden md:block w-full px-2 py-4 border-b border-dashed border-border/40 backdrop-blur-sm bg-background/80 sticky top-0 z-10">
+        <div className="max-w-3xl mx-auto flex items-center justify-between">
+          <NavLinks />
         </div>
-        
-
       </header>
-      
-      <main className="flex-1 transition-all duration-300 ease-in-out">
-        <div className=" px-4 py-8 animate-fade-in">
-        <Suspense fallback={<PageLoader />}>
-              <Outlet />
-            </Suspense>
+
+      {/* Main Content */}
+      <main className="flex-1">
+        <div className="max-w-3xl mx-auto px-4 py-8 animate-fade-in">
+          <Suspense fallback={<PageLoader />}>
+            <Outlet />
+          </Suspense>
         </div>
       </main>
 
-    </div>
+      {/* Mobile Navbar */}
+      <footer className="md:hidden fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur border-t border-dashed border-border/40 z-10">
+        <div className="max-w-3xl mx-auto px-2 py-2">
+          <NavLinks />
+        </div>
+      </footer>
     </div>
   );
 };
