@@ -3,7 +3,7 @@ import { useToast } from "@/hooks/use-toast";
 import { recordCompletedPomodoro } from '@/utils/streakTracker';
 import { getFocusMusicPlayer } from '@/utils/focusMusic';
 import { sendNotification } from '@/utils/notifications';
-import { useTasks } from './TaskContext'; // Import the task context
+import { useTasks } from './TaskContext'; 
 
 export type TimerMode = 'focus' | 'shortBreak' | 'longBreak';
 
@@ -122,7 +122,6 @@ const TimerProviderInternal: React.FC<{
       initialSettings = defaultSettings;
     }
 
-    // Save the merged settings back to localStorage to ensure consistency
     localStorage.setItem('timerSettings', JSON.stringify(initialSettings));
     return initialSettings;
   });

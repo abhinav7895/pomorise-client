@@ -99,6 +99,19 @@ const Layout: React.FC = () => {
           <NavLinks />
         </div>
       </footer>
+
+      {/* Footer Credit */}
+      <div className="text-center text-sm text-gray-500 py-4">
+        Made with ❤️ by{' '}
+        <a 
+          href="https://abhinavyadav.in" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="text-primary hover:underline"
+        >
+          Abhinav Yadav
+        </a>
+      </div>
     </div>
   );
 };

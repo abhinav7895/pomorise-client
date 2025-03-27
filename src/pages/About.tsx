@@ -50,17 +50,8 @@ const About: React.FC = () => {
           
           <section className="pt-4 border-t border-border">
             <p className="text-sm text-muted-foreground">
-              Pomorise is designed to help you master your time, build lasting habits, and gain deep insights into your productivity—all in one place, enhanced by AI-driven analysis. <br />
-              Made with ❤️ by{' '}
-              <a 
-                href="https://abhinavyadav.in" 
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary hover:underline"
-              >
-                Abhinav Yadav
-              </a>
-              . <br />
+              Pomorise is designed to help you master your time, build lasting habits, and gain deep insights into your productivity—all in one place, enhanced by AI-driven analysis.
+              <br />
               <a 
                 href="https://en.wikipedia.org/wiki/Pomodoro_Technique" 
                 target="_blank"
