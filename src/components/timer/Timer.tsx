@@ -24,7 +24,7 @@ const Timer: React.FC = () => {
     skipTimer,
     setTimerMode,
     pomodoroCount,
-    settings, // Add settings to access autoStartBreaks and autoStartPomodoros
+    settings,
   } = useTimer();
 
   const { toast } = useToast(); // Add toast for notifications
@@ -71,24 +71,6 @@ const Timer: React.FC = () => {
       incrementCompletedPomodoros(activeTask.id);
     }
 
-    // Show a toast when the timer auto-starts the next session
-    if (
-      timerState === 'running' &&
-      prevTimerState === 'finished' &&
-      settings.autoStartBreaks &&
-      settings.autoStartPomodoros
-    ) {
-      const message =
-        timerMode === 'focus'
-          ? 'Starting a new Pomodoro session!'
-          : timerMode === 'shortBreak'
-          ? 'Starting a short break!'
-          : 'Starting a long break!';
-      toast({
-        title: "Timer Auto-Started",
-        description: message,
-      });
-    }
 
     prevTimerStateRef.current = timerState;
     prevTimerModeRef.current = timerMode;

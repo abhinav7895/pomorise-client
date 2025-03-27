@@ -321,6 +321,7 @@ const TimerProviderInternal: React.FC<{
       description: message,
     });
     
+    
     sendNotification(title, { body: message });
   };
 
