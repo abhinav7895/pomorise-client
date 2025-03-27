@@ -15,7 +15,7 @@ const About = lazy(() => import('./pages/About'));
 const Settings = lazy(() => import('./pages/Settings'));
 const Habits = lazy(() => import('./pages/Habits'));
 const Insights = lazy(() => import('./pages/Insights'));
-const Journal = lazy(() => import('./pages/Journal')); 
+const Journal = lazy(() => import('./pages/Journal'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 export const PageLoader = () => (
@@ -32,24 +32,20 @@ const App = () => (
         <TaskProvider>
           <TimerProviderWithTasks>
             <HabitProvider>
-              <JournalProvider> 
+              <JournalProvider>
                 <Toaster />
                 <Sonner richColors position="top-left" />
                 <Suspense fallback={<PageLoader />}>
                   <Routes>
-                    <Route path='/' >
-                      <Route element={<Layout />}>
-                      <Route path="" element={<Index />} />
-                      <Route path="about" element={<About />} />
-                      <Route path="settings" element={<Settings />} />
-                      <Route path="habits" element={<Habits />} />
-                      <Route path="insights" element={<Insights />} />
-                      <Route path="journal" element={<Journal />} /> 
-                      </Route>
+                    <Route element={<Layout />}>
+                      <Route path="/" element={<Index />} />
+                      <Route path="/about" element={<About />} />
+                      <Route path="/settings" element={<Settings />} />
+                      <Route path="/habits" element={<Habits />} />
+                      <Route path="/insights" element={<Insights />} />
+                      <Route path="/journal" element={<Journal />} />
+                      <Route path="*" element={<NotFound />} />
                     </Route>
-                  <Route path="*" element={<NotFound />} />
-                  </Routes>
-                  <Routes>
                   </Routes>
                 </Suspense>
               </JournalProvider>

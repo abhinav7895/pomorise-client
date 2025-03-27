@@ -64,7 +64,7 @@ const TaskItem = ({ task, isActive, compact = false }: TaskItemProps) => {
         "dark:bg-card dark:hover:bg-secondary",
         task.isCompleted ? "" : "cursor-pointer"
       )}
-      onClick={!task.isCompleted && handleSetActive}
+      onClick={!task.isCompleted ? handleSetActive : undefined}
     >
       <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
         <div className="space-y-1 flex-1 min-w-0"> 
