@@ -5,51 +5,62 @@ import SEO from '@/components/SEO';
 const About: React.FC = () => {
   return (
     <>
-    <SEO
-        title="About Pomodoro Timer - Learn the Technique & Features"
-        description="Discover the Pomodoro Technique history and how our app enhances productivity with timer, tasks, and habits."
-        keywords="pomodoro technique, about pomodoro, productivity method, time management technique"
+      <SEO
+        title="About Pomorise - Enhance Productivity with Advanced Features"
+        description="Learn about Pomorise, the ultimate productivity app combining the Pomodoro Technique with task management, habit tracking, AI-powered insights, and journaling."
+        keywords="pomorise, pomodoro technique, productivity app, time management, habit tracker, ai insights"
         canonicalUrl="https://pomorise.vercel.app/about"
       />
-      <div className="mx-auto  animate-fade-in">
-        <h1 className="text-2xl font-semibold mb-6">About Pomodoro Timer</h1>
+      <div className="mx-auto animate-fade-in">
+        <h1 className="text-2xl font-semibold mb-6">About Pomorise</h1>
         
         <div className="space-y-6">
           <section>
             <h2 className="text-xl font-medium mb-3">The Pomodoro Technique</h2>
             <p className="text-muted-foreground">
-              The Pomodoro Technique is a time management method developed by Francesco Cirillo in the late 1980s. 
-              It uses a timer to break work into intervals, traditionally 25 minutes in length, separated by short breaks.
+              The Pomodoro Technique, developed by Francesco Cirillo in the late 1980s, is a time management method that breaks work into focused intervals (typically 25 minutes) separated by short breaks. Pomorise builds on this foundation to supercharge your productivity.
             </p>
           </section>
           
           <section>
-            <h2 className="text-xl font-medium mb-3">How to Use</h2>
+            <h2 className="text-xl font-medium mb-3">How to Use Pomorise</h2>
             <ol className="list-decimal list-inside space-y-2 text-muted-foreground">
-              <li>Add tasks to work on today</li>
-              <li>Set estimate pomodoros (1 = 25min) for each task</li>
-              <li>Select a task to work on</li>
-              <li>Start timer and focus on the task</li>
-              <li>Take a break when the timer rings</li>
-              <li>After 4 pomodoros, take a longer break</li>
+              <li>Add tasks to your daily list</li>
+              <li>Set estimated pomodoros (1 = 25min) for each task</li>
+              <li>Select a task and start the timer</li>
+              <li>Focus until the timer rings, then take a break</li>
+              <li>After 4 pomodoros, enjoy a longer break</li>
+              <li>Track habits, get AI-powered insights, and journal your progress</li>
             </ol>
           </section>
           
           <section>
             <h2 className="text-xl font-medium mb-3">Features</h2>
             <ul className="list-disc list-inside space-y-2 text-muted-foreground">
-              <li>Responsive timer with visual state indication</li>
-              <li>Task management with estimated pomodoros</li>
-              <li>Track completed pomodoros</li>
-              <li>Customizable timer durations</li>
-              <li>Auto-start options for breaks and pomodoros</li>
-              <li>Notifications when timers complete</li>
+              <li>Responsive Pomodoro timer with visual state indication</li>
+              <li>Task management with estimated pomodoros and completion tracking</li>
+              <li>Customizable timer durations and auto-start options</li>
+              <li>Habit tracking inspired by Atomic Habits principles</li>
+              <li>AI-powered insights to analyze your productivity patterns</li>
+              <li>Journal feature for reflection and note-taking</li>
+              <li>Notifications and sound effects for timer completion</li>
+              <li>Settings to tailor your experience (timer, notifications, sound)</li>
             </ul>
           </section>
           
           <section className="pt-4 border-t border-border">
             <p className="text-sm text-muted-foreground">
-              Created with focus and simplicity in mind. <br />
+              Pomorise is designed to help you master your time, build lasting habits, and gain deep insights into your productivity—all in one place, enhanced by AI-driven analysis. <br />
+              Made with ❤️ by{' '}
+              <a 
+                href="https://abhinavyadav.in" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline"
+              >
+                Abhinav Yadav
+              </a>
+              . <br />
               <a 
                 href="https://en.wikipedia.org/wiki/Pomodoro_Technique" 
                 target="_blank"
