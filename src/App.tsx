@@ -3,7 +3,6 @@ import { Loader2 } from 'lucide-react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "./context/ThemeContext";
 import { TimerProviderWithTasks } from "./context/TimerContext";
 import { TaskProvider } from "./context/TaskContext";
@@ -11,7 +10,6 @@ import { HabitProvider } from "./context/HabitContext";
 import { JournalProvider } from "./context/JournalContext";
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Layout from './components/layout/Layout';
-
 const Index = lazy(() => import('./pages/Index'));
 const About = lazy(() => import('./pages/About'));
 const Settings = lazy(() => import('./pages/Settings'));
@@ -26,7 +24,6 @@ export const PageLoader = () => (
   </div>
 );
 
-const queryClient = new QueryClient();
 
 const App = () => (
   <BrowserRouter>
