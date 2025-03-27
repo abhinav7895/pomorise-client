@@ -76,7 +76,7 @@ const Layout: React.FC = () => {
   );
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex mb-[100px] flex-col">
       {/* Desktop Navbar */}
       <header className="hidden md:block w-full px-2 py-4 border-b border-dashed border-border/40 backdrop-blur-sm bg-background/80 sticky top-0 z-10">
         <div className="max-w-3xl mx-auto flex items-center justify-between">
