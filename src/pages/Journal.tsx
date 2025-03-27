@@ -1,10 +1,9 @@
-// src/pages/Journal.tsx
 import React, { useState } from 'react';
 import { JournalEntry, useJournals } from '@/context/JournalContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Archive, Trash2, Plus, ArrowLeft } from 'lucide-react';
+import { Archive, Trash2, Plus, ArrowLeft, Minus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format } from 'date-fns';
 import SEO from '@/components/SEO';
@@ -63,12 +62,13 @@ const Journal: React.FC = () => {
                         <div className="flex justify-between items-center">
                             <h1 className="text-2xl font-bold">Journal</h1>
                             <Button
-                                variant="outline"
+                                size="sm"
+                                className="flex items-center gap-2"
                                 onClick={() => setIsAdding(!isAdding)}
-                                className="gap-2"
                             >
-                                <Plus className="h-4 w-4" />
-                                {isAdding ? 'Cancel' : 'New Entry'}
+
+                                {isAdding ? <Plus className="h-4 w-4" /> : <Minus className="h-4 w-4" />}
+                                <span className="hidden sm:inline">   {isAdding ? 'Cancel' : 'New Entry'}</span>
                             </Button>
                         </div>
 
