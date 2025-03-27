@@ -27,8 +27,6 @@ const TaskItem = ({ task, isActive, compact = false }: TaskItemProps) => {
     setActiveTask,
   } = useTasks();
 
-
-
   const handleToggleComplete = (e: React.MouseEvent) => {
     e.stopPropagation();
     completeTask(task.id);
@@ -56,13 +54,12 @@ const TaskItem = ({ task, isActive, compact = false }: TaskItemProps) => {
   };
 
   const timeAgo = formatDistanceToNow(new Date(task.createdAt), { addSuffix: true });
-
   const isRunning = isActive && isTimerActive;
 
   return (
     <div
       className={cn(
-        "group relative border p-4 hover:bg-secondary  transition-colors",
+        "group relative border p-4 hover:bg-secondary transition-colors",
         isActive ? "bg-primary/10" : "bg-card",
         "dark:bg-card dark:hover:bg-secondary",
         task.isCompleted ? "" : "cursor-pointer"
@@ -70,14 +67,21 @@ const TaskItem = ({ task, isActive, compact = false }: TaskItemProps) => {
       onClick={!task.isCompleted && handleSetActive}
     >
       <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
-        <div className="space-y-1">
+        <div className="space-y-1 flex-1 min-w-0"> 
           <div className="flex items-center gap-2">
-            <h3 className="text-lg font-semibold truncate">{task.title}</h3>
+            <h3 
+              className="text-lg font-semibold truncate max-w-full" 
+              title={task.title} 
+            >
+              {task.title}
+            </h3>
             {task.isCompleted && (
-              <Badge variant="secondary" className=' bg-transparent text-green-400 p-0'><CircleCheck className='size-4' /></Badge>
+              <Badge variant="secondary" className='bg-transparent text-green-400 p-0'>
+                <CircleCheck className='size-4' />
+              </Badge>
             )}
           </div>
-          <p className="text-sm text-muted-foreground">{task.notes || ''}</p>
+          <p className="text-sm text-muted-foreground truncate">{task.notes || ''}</p>
           <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs text-muted-foreground">
             <div className="flex items-center space-x-1">
               <Clock className="w-3 h-3 flex-shrink-0" />
@@ -90,7 +94,7 @@ const TaskItem = ({ task, isActive, compact = false }: TaskItemProps) => {
           </div>
         </div>
 
-        <div className="flex items-center space-x-2 ml-auto">
+        <div className="flex items-center space-x-2 ml-auto flex-shrink-0"> {/* Added flex-shrink-0 to prevent button compression */}
           {!task.isCompleted && (
             <Button
               variant={"outline"}

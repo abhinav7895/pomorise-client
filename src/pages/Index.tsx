@@ -1,7 +1,7 @@
-
 import React from 'react';
 import Timer from '@/components/timer/Timer';
 import TaskList from '@/components/tasks/TaskList';
+import JournalList from '@/components/journal/JournalList'; 
 import StreakCalendar from '@/components/streak/StreakCalendar';
 import HabitWidget from '@/components/habits/HabitWidget';
 import { motion } from 'framer-motion';
@@ -13,7 +13,6 @@ import { Link } from 'react-router-dom';
 import SEO from '@/components/SEO';
 
 const Index = () => {
-  // Request notification permissions and register service worker when the page loads
   React.useEffect(() => {
     requestNotificationPermission();
     registerServiceWorker();
@@ -43,8 +42,8 @@ const Index = () => {
   };
 
   return (
-<>
-    <SEO
+    <>
+      <SEO
         title="Pomodoro Timer - Boost Productivity with Task & Habit Tracking"
         description="Enhance your focus and productivity with our free Pomodoro timer app. Features task management, habit tracking, and performance insights."
         keywords="pomodoro timer, productivity app, task management, habit tracker, time management"
@@ -56,7 +55,6 @@ const Index = () => {
         initial="hidden"
         animate="visible"
       >
-        {/* Always visible Pomodoro Timer Section at the top */}
         <motion.div 
           variants={itemVariants}
           className="w-full"
@@ -72,6 +70,16 @@ const Index = () => {
             <h2 className="text-2xl font-bold">All Tasks</h2>
           </div>
           <TaskList />
+        </motion.div>
+
+        <motion.div 
+          variants={itemVariants} 
+          className="w-full"
+        >
+          <div className="mb-4">
+            <h2 className="text-2xl font-bold">All Journal</h2>
+          </div>
+          <JournalList /> 
         </motion.div>
 
         <div className="gap-6 w-full mb-6">
@@ -90,9 +98,7 @@ const Index = () => {
               <HabitWidget />
             </div>
           </motion.div>
-          
         </div>
-        
 
         <motion.div 
           variants={itemVariants} 
@@ -100,9 +106,7 @@ const Index = () => {
         >
           <StreakCalendar />
         </motion.div>
-        
       </motion.div>
-
     </>
   );
 };
