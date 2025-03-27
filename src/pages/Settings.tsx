@@ -5,23 +5,22 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'; 
-import { useTimer } from '@/context/TimerContext'; 
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useTimer } from '@/context/TimerContext';
 import { motion } from 'framer-motion';
 import SEO from '@/components/SEO';
 
 const Settings: React.FC = () => {
   const [isTimerSettingsOpen, setIsTimerSettingsOpen] = useState(false);
-  const { settings, updateSettings } = useTimer(); 
+  const { settings, updateSettings } = useTimer();
 
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
   const alarmSounds = [
-    'Alarm Bell.mp3',
-    'Alarm Bird.mp3',
-    'button-click.mp3',
-    'Digital Alarm.mp3',
-    'Focus Alarm 1 Hour.mp3',
+    { file: 'Alarm Bell.mp3', displayName: 'Alarm Bell' },
+    { file: 'Alarm Bird.mp3', displayName: 'Bird Chirp' },
+    { file: 'Digital Alarm.mp3', displayName: 'Digital Beep' },
+    { file: 'Focus Alarm 1 Hour.mp3', displayName: 'Focus Alarm' },
   ];
 
   const container = {
@@ -134,8 +133,8 @@ const Settings: React.FC = () => {
                   </SelectTrigger>
                   <SelectContent>
                     {alarmSounds.map((sound) => (
-                      <SelectItem key={sound} value={sound}>
-                        {sound.replace('.mp3', '')}
+                      <SelectItem key={sound.file} value={sound.file}>
+                        {sound.displayName}
                       </SelectItem>
                     ))}
                   </SelectContent>
