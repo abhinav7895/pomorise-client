@@ -44,7 +44,7 @@ const Habits = () => {
         <header className="mb-6">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
-              <Button variant="ghost" size="icon" asChild>
+              <Button variant="ghost" size="icon" className='hidden sm:block' asChild>
                 <Link to="/">
                   <ArrowLeft className="h-5 w-5" />
                 </Link>
