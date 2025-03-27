@@ -7,8 +7,8 @@ import clickSoundFile from '/audio/button-click.mp3';
 
 interface TimerControlsProps {
   timerState: 'idle' | 'running' | 'paused' | 'finished';
-  onStart: () => void;
-  onPause: () => void;
+  onStart: (isManual?: boolean) => void; // Add isManual flag
+  onPause: (isManual?: boolean) => void; // Add isManual flag
   onReset: () => void;
   onSkip: () => void;
   timerMode: TimerMode;
@@ -28,7 +28,7 @@ const TimerControls: React.FC<TimerControlsProps> = ({
     switch (timerMode) {
       case 'focus':
         return {
-          primary: 'bg-timer-focus/20 hover:bg-timer-focus/40 border-timer-focus text-white ',
+          primary: 'bg-timer-focus/20 hover:bg-timer-focus/40 border-timer-focus text-white',
           secondary: 'border-timer-focus text-timer-focus hover:bg-timer-focus/10',
         };
       case 'shortBreak':
@@ -51,19 +51,21 @@ const TimerControls: React.FC<TimerControlsProps> = ({
 
   const themeStyles = getThemeStyles();
 
-  const handleStartClick = () => {
+  const playClickSound = () => {
     if (clickSoundRef.current) {
       clickSoundRef.current.currentTime = 0;
       clickSoundRef.current.play().catch(error => console.error("Error playing sound:", error));
     }
-    onStart();
   };
+
+  const handleStartClick = () => {
+    playClickSound();
+    onStart(true); // Pass isManual=true for manual start
+  };
+
   const handlePauseClick = () => {
-    if (clickSoundRef.current) {
-      clickSoundRef.current.currentTime = 0;
-      clickSoundRef.current.play().catch(error => console.error("Error playing sound:", error));
-    }
-    onPause();
+    playClickSound();
+    onPause(true); // Pass isManual=true for manual pause
   };
 
   return (
@@ -83,7 +85,7 @@ const TimerControls: React.FC<TimerControlsProps> = ({
         </Button>
       ) : (
         <Button
-          onClick={handleStartClick} 
+          onClick={handleStartClick}
           variant="outline"
           className={cn(
             "button-hover-effect button-active-effect p-3 border-dashed h-auto shadow-lg transition-all duration-300",

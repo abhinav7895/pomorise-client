@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
 import { Slider } from '@/components/ui/slider';
+import { Button } from '@/components/ui/button';
 import { useTimer } from '@/context/TimerContext';
 
 interface TimerSettingsProps {
@@ -14,17 +12,15 @@ interface TimerSettingsProps {
 
 const TimerSettings: React.FC<TimerSettingsProps> = ({ open, onOpenChange }) => {
   const { settings, updateSettings } = useTimer();
-
+  
   const [localSettings, setLocalSettings] = useState({
     focusDuration: settings.focusDuration / 60,
     shortBreakDuration: settings.shortBreakDuration / 60,
     longBreakDuration: settings.longBreakDuration / 60,
     longBreakInterval: settings.longBreakInterval,
-    autoStartBreaks: settings.autoStartBreaks,
-    autoStartPomodoros: settings.autoStartPomodoros,
   });
 
-  const handleChange = (field: string, value: number | boolean) => {
+  const handleChange = (field: string, value: number) => {
     setLocalSettings({
       ...localSettings,
       [field]: value,
@@ -37,8 +33,6 @@ const TimerSettings: React.FC<TimerSettingsProps> = ({ open, onOpenChange }) => 
       shortBreakDuration: localSettings.shortBreakDuration * 60,
       longBreakDuration: localSettings.longBreakDuration * 60,
       longBreakInterval: localSettings.longBreakInterval,
-      autoStartBreaks: localSettings.autoStartBreaks,
-      autoStartPomodoros: localSettings.autoStartPomodoros,
     });
     onOpenChange(false);
   };
@@ -52,7 +46,7 @@ const TimerSettings: React.FC<TimerSettingsProps> = ({ open, onOpenChange }) => 
             Customize your timer to match your workflow.
           </DialogDescription>
         </DialogHeader>
-
+        
         <div className="grid gap-5 py-4">
           <div className="space-y-2">
             <div className="flex justify-between items-center">
@@ -69,7 +63,7 @@ const TimerSettings: React.FC<TimerSettingsProps> = ({ open, onOpenChange }) => 
               className="w-full"
             />
           </div>
-
+          
           <div className="space-y-2">
             <div className="flex justify-between items-center">
               <Label htmlFor="shortBreakDuration">Short Break</Label>
@@ -85,7 +79,7 @@ const TimerSettings: React.FC<TimerSettingsProps> = ({ open, onOpenChange }) => 
               className="w-full"
             />
           </div>
-
+          
           <div className="space-y-2">
             <div className="flex justify-between items-center">
               <Label htmlFor="longBreakDuration">Long Break</Label>
@@ -101,7 +95,7 @@ const TimerSettings: React.FC<TimerSettingsProps> = ({ open, onOpenChange }) => 
               className="w-full"
             />
           </div>
-
+          
           <div className="space-y-2">
             <div className="flex justify-between items-center">
               <Label htmlFor="longBreakInterval">Long Break Interval</Label>
@@ -117,26 +111,8 @@ const TimerSettings: React.FC<TimerSettingsProps> = ({ open, onOpenChange }) => 
               className="w-full"
             />
           </div>
-
-          <div className="flex items-center justify-between">
-            <Label htmlFor="autoStartBreaks" className="flex-1">Auto-start Breaks</Label>
-            <Switch
-              id="autoStartBreaks"
-              checked={localSettings.autoStartBreaks}
-              onCheckedChange={(checked) => handleChange('autoStartBreaks', checked)}
-            />
-          </div>
-
-          <div className="flex items-center justify-between">
-            <Label htmlFor="autoStartPomodoros" className="flex-1">Auto-start Pomodoros</Label>
-            <Switch
-              id="autoStartPomodoros"
-              checked={localSettings.autoStartPomodoros}
-              onCheckedChange={(checked) => handleChange('autoStartPomodoros', checked)}
-            />
-          </div>
         </div>
-
+        
         <div className="flex justify-end">
           <Button onClick={handleSave} className="px-6 shadow transition-all">
             Save Settings

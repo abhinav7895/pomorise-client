@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "../ui/button";
 import TimerSettings from "./TimerSettings";
+import { useToast } from "@/hooks/use-toast"; 
 
 const Timer: React.FC = () => {
   const {
@@ -23,13 +24,15 @@ const Timer: React.FC = () => {
     skipTimer,
     setTimerMode,
     pomodoroCount,
+    settings, // Add settings to access autoStartBreaks and autoStartPomodoros
   } = useTimer();
 
+  const { toast } = useToast(); // Add toast for notifications
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const { getActiveTask, incrementCompletedPomodoros } = useTasks();
   const activeTask = getActiveTask();
   const [isModeMenuOpen, setIsModeMenuOpen] = useState(false);
-  
+
   const prevTimerStateRef = useRef(timerState);
   const prevTimerModeRef = useRef(timerMode);
 
@@ -45,8 +48,8 @@ const Timer: React.FC = () => {
     const formattedTime = formatTime(timeRemaining);
     const modePrefix =
       timerMode === 'focus' ? '🧠 Focus' :
-        timerMode === 'shortBreak' ? '☕ Break' :
-          '🌿 Long Break';
+      timerMode === 'shortBreak' ? '☕ Break' :
+      '🌿 Long Break';
 
     document.title = `${formattedTime} - ${modePrefix}`;
 
@@ -54,21 +57,42 @@ const Timer: React.FC = () => {
       document.title = 'Pomodoro Timer';
     };
   }, [timeRemaining, timerMode]);
+
   useEffect(() => {
     const prevTimerState = prevTimerStateRef.current;
-    
+    const prevTimerMode = prevTimerModeRef.current;
+
     if (
-      timerState === 'finished' && 
+      timerState === 'finished' &&
       prevTimerState !== 'finished' &&
-      timerMode === 'focus' && 
+      timerMode === 'focus' &&
       activeTask
     ) {
       incrementCompletedPomodoros(activeTask.id);
     }
-    
+
+    // Show a toast when the timer auto-starts the next session
+    if (
+      timerState === 'running' &&
+      prevTimerState === 'finished' &&
+      settings.autoStartBreaks &&
+      settings.autoStartPomodoros
+    ) {
+      const message =
+        timerMode === 'focus'
+          ? 'Starting a new Pomodoro session!'
+          : timerMode === 'shortBreak'
+          ? 'Starting a short break!'
+          : 'Starting a long break!';
+      toast({
+        title: "Timer Auto-Started",
+        description: message,
+      });
+    }
+
     prevTimerStateRef.current = timerState;
     prevTimerModeRef.current = timerMode;
-  }, [timerState, timerMode, activeTask]);
+  }, [timerState, timerMode, activeTask, settings, toast]);
 
   const getThemeClass = (): string => {
     switch (timerMode) {
@@ -122,7 +146,7 @@ const Timer: React.FC = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
       className={cn(
-        "flex flex-col max-w-3xl mx-auto select-none  border-dashed w-full items-center p-8 glass-card transition-all duration-500 ease-in-out",
+        "flex flex-col max-w-3xl mx-auto select-none border-dashed w-full items-center p-8 glass-card transition-all duration-500 ease-in-out",
         getThemeClass(),
         "border bg-[var(--timer-bg)]"
       )}
@@ -144,12 +168,12 @@ const Timer: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.2 }}
-                className="absolute w-full mt-1 py-1 dark:bg-neutral-900/60  border border-dashed z-10"
+                className="absolute w-full mt-1 py-1 dark:bg-neutral-900/60 border border-dashed z-10"
               >
                 <button
                   onClick={() => handleModeSelect('focus')}
                   className={cn(
-                    "w-full text-left  px-4 py-2 hover:bg-secondary transition-colors",
+                    "w-full text-left px-4 py-2 hover:bg-secondary transition-colors",
                     timerMode === 'focus' && "font-medium text-timer-focus"
                   )}
                 >
@@ -186,7 +210,6 @@ const Timer: React.FC = () => {
             className="text-muted-foreground hover:text-foreground transition-colors"
           >
             <Settings2 className="w-4 h-4" />
-            
           </Button>
 
           <MusicToggle />
@@ -210,20 +233,20 @@ const Timer: React.FC = () => {
           pathClassName={cn(getProgressColor(), pulseAnimation)}
         >
           <div className="flex flex-col items-center">
-        <div className="text-6xl font-light text-[var(--timer-text)] timer-text mb-2">
-          {formatTime(timeRemaining)}
-        </div>
-        {activeTask ? (
-          <div className="text-sm text-muted-foreground flex items-center max-w-[200px]">
-            <ListTodo className="w-3 h-3 mr-1 flex-shrink-0" />
-            <span className="font-medium truncate">{activeTask.title}</span>
-          </div>
-        ) : (
-          <div className="text-sm text-muted-foreground flex items-center opacity-60">
-            <Clock className="w-3 h-3 mr-1" />
-            <span>No active task</span>
-          </div>
-        )}
+            <div className="text-6xl font-light text-[var(--timer-text)] timer-text mb-2">
+              {formatTime(timeRemaining)}
+            </div>
+            {activeTask ? (
+              <div className="text-sm text-muted-foreground flex items-center max-w-[200px]">
+                <ListTodo className="w-3 h-3 mr-1 flex-shrink-0" />
+                <span className="font-medium truncate">{activeTask.title}</span>
+              </div>
+            ) : (
+              <div className="text-sm text-muted-foreground flex items-center opacity-60">
+                <Clock className="w-3 h-3 mr-1" />
+                <span>No active task</span>
+              </div>
+            )}
           </div>
         </CircularProgress>
       </motion.div>

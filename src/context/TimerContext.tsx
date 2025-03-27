@@ -122,6 +122,7 @@ const TimerProviderInternal: React.FC<{
       initialSettings = defaultSettings;
     }
 
+    // Save the merged settings back to localStorage to ensure consistency
     localStorage.setItem('timerSettings', JSON.stringify(initialSettings));
     return initialSettings;
   });
