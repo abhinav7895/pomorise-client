@@ -77,14 +77,12 @@ const Layout: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Desktop Navbar */}
       <header className="hidden md:block w-full px-2 py-4 border-b border-dashed border-border/40 backdrop-blur-sm bg-background/80 sticky top-0 z-10">
         <div className="max-w-3xl mx-auto flex items-center justify-between">
           <NavLinks />
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="flex-1">
         <div className="max-w-3xl mx-auto px-4 py-8 animate-fade-in">
           <Suspense fallback={<PageLoader />}>
@@ -93,7 +91,6 @@ const Layout: React.FC = () => {
         </div>
       </main>
 
-      {/* Mobile Navbar */}
       <footer className="md:hidden fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur border-t border-dashed border-border/40 z-10">
         <div className="max-w-3xl mx-auto px-2 py-2">
           <NavLinks />
