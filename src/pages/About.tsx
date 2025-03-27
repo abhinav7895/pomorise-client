@@ -67,7 +67,7 @@ const About: React.FC = () => {
                 rel="noopener noreferrer"
                 className="inline-flex items-center text-primary hover:underline"
               >
-                Learn more about the Pomodoro Technique <ExternalLink className="ml-1 w-3 h-3" />
+                Learn more about the Pomodoro Technique 
               </a>
             </p>
           </section>
