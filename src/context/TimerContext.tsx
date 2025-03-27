@@ -97,7 +97,33 @@ const TimerProviderInternal: React.FC<{
 
   const [settings, setSettings] = useState<TimerSettings>(() => {
     const savedSettings = localStorage.getItem('timerSettings');
-    return savedSettings ? JSON.parse(savedSettings) : defaultSettings;
+    let initialSettings: TimerSettings;
+
+    if (savedSettings) {
+      try {
+        const parsedSettings = JSON.parse(savedSettings);
+        initialSettings = {
+          ...defaultSettings,
+          ...parsedSettings,
+          alarmEnabled:
+            parsedSettings.alarmEnabled !== undefined
+              ? parsedSettings.alarmEnabled
+              : defaultSettings.alarmEnabled,
+          selectedAlarm:
+            parsedSettings.selectedAlarm !== undefined
+              ? parsedSettings.selectedAlarm
+              : defaultSettings.selectedAlarm,
+        };
+      } catch (error) {
+        console.error('Error parsing saved settings:', error);
+        initialSettings = defaultSettings;
+      }
+    } else {
+      initialSettings = defaultSettings;
+    }
+
+    localStorage.setItem('timerSettings', JSON.stringify(initialSettings));
+    return initialSettings;
   });
   
   const [timerState, setTimerState] = useState<'idle' | 'running' | 'paused' | 'finished'>('idle');
