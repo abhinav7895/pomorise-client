@@ -1,9 +1,9 @@
-
-import React from 'react';
+import React, { useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { PlayCircle, PauseCircle, RefreshCw, SkipForward } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { TimerMode } from '@/context/TimerContext';
+import clickSoundFile from '/audio/button-click.mp3';
 
 interface TimerControlsProps {
   timerState: 'idle' | 'running' | 'paused' | 'finished';
@@ -22,6 +22,8 @@ const TimerControls: React.FC<TimerControlsProps> = ({
   onSkip,
   timerMode,
 }) => {
+  const clickSoundRef = useRef(new Audio(clickSoundFile));
+
   const getThemeStyles = () => {
     switch (timerMode) {
       case 'focus':
@@ -49,11 +51,26 @@ const TimerControls: React.FC<TimerControlsProps> = ({
 
   const themeStyles = getThemeStyles();
 
+  const handleStartClick = () => {
+    if (clickSoundRef.current) {
+      clickSoundRef.current.currentTime = 0;
+      clickSoundRef.current.play().catch(error => console.error("Error playing sound:", error));
+    }
+    onStart();
+  };
+  const handlePauseClick = () => {
+    if (clickSoundRef.current) {
+      clickSoundRef.current.currentTime = 0;
+      clickSoundRef.current.play().catch(error => console.error("Error playing sound:", error));
+    }
+    onPause();
+  };
+
   return (
     <div className="flex items-center gap-4">
       {timerState === 'running' ? (
         <Button
-          onClick={onPause}
+          onClick={handlePauseClick}
           variant="outline"
           className={cn(
             "button-hover-effect button-active-effect p-3 h-auto border-dashed shadow-lg transition-all duration-300",
@@ -66,7 +83,7 @@ const TimerControls: React.FC<TimerControlsProps> = ({
         </Button>
       ) : (
         <Button
-          onClick={onStart}
+          onClick={handleStartClick} 
           variant="outline"
           className={cn(
             "button-hover-effect button-active-effect p-3 border-dashed h-auto shadow-lg transition-all duration-300",
