@@ -1,13 +1,11 @@
 
 // Cache name with version
-const CACHE_NAME = 'pomodoro-app-v1';
+const CACHE_NAME = 'pomodoro-app-v2';
 
 // URLs to cache initially
 const URLS_TO_CACHE = [
   '/',
   '/index.html',
-  '/manifest.json',
-  '/notification.mp3'
 ];
 
 // Install event - cache assets
