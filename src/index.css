@@ -181,3 +181,93 @@
 .button-active-effect:active {
   transform: translateY(1px);
 }
+
+
+/* src/index.css or wherever your global styles are */
+.ql-toolbar.ql-snow {
+  @apply   bg-background ;
+}
+
+.ql-container.ql-snow {
+  @apply bg-background ;
+}
+
+.ql-editor {
+  @apply min-h-[200px] text-foreground;
+}
+
+.ql-editor p, .ql-editor h1, .ql-editor h2 {
+  @apply text-foreground;
+}
+
+.ql-snow .ql-picker .ql-container {
+  @apply text-foreground border-none;
+}
+
+.ql-snow .ql-stroke {
+  @apply stroke-foreground border-none;
+}
+
+.ql-snow .ql-fill {
+  @apply fill-foreground;
+}
+.ql-toolbar.ql-snow {
+  @apply border;
+}
+
+.ql-toolbar.ql-snow {
+  border-left: 0px dashed #292c32 !important;
+  border-right: 0px dashed #292c32 !important;
+  border-top: 0px dashed #292c32 !important;
+
+  border-bottom: 1px dashed #292c32 !important;
+}
+.ql-container.ql-snow {
+
+  border: none !important;
+}
+
+.quill-content {
+  @apply font-mono text-[hsl(var(--foreground))];
+  font-family: 'Geist Mono', monospace;
+}
+
+.quill-content h1 {
+  @apply text-3xl font-bold mb-4;
+}
+
+.quill-content h2 {
+  @apply text-2xl font-bold mb-3;
+}
+
+.quill-content p {
+  @apply mb-4;
+}
+
+.quill-content ul {
+  @apply list-disc pl-6 mb-4;
+}
+
+.quill-content ol {
+  @apply list-decimal pl-6 mb-4;
+}
+
+.quill-content li {
+  @apply mb-1;
+}
+
+.quill-content a {
+  @apply text-[hsl(var(--primary))] underline hover:text-[hsl(var(--primary)/0.8)];
+}
+
+.quill-content strong {
+  @apply font-bold;
+}
+
+.quill-content em {
+  @apply italic;
+}
+
+.quill-content u {
+  @apply underline;
+}

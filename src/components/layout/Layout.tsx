@@ -1,7 +1,7 @@
 
 import React, { Suspense, useEffect } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import { Settings, Info,  House, Brain, Target } from 'lucide-react';
+import { Settings, Info,  House, Brain, Target, BookOpen } from 'lucide-react';
 import { PageLoader } from '@/App';
 
 const Layout: React.FC = () => {
@@ -33,6 +33,16 @@ const Layout: React.FC = () => {
         }`}
       >
         <Brain className='size-5' />
+      </Link>
+      <Link 
+        to="/journal"
+        className={`p-2 border border-dashed flex items-center gap-2 transition-colors ${
+          location.pathname === '/journal' 
+            ? 'bg-primary/10 text-primary font-medium' 
+            : 'hover:bg-secondary/80'
+        }`}
+      >
+        <BookOpen className='size-5' />
       </Link>
       <Link 
         to="/habits"

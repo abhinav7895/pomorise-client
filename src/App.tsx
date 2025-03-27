@@ -8,13 +8,16 @@ import { ThemeProvider } from "./context/ThemeContext";
 import { TimerProviderWithTasks } from "./context/TimerContext";
 import { TaskProvider } from "./context/TaskContext";
 import { HabitProvider } from "./context/HabitContext";
+import { JournalProvider } from "./context/JournalContext"; // Add this
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Layout from './components/layout/Layout';
+
 const Index = lazy(() => import('./pages/Index'));
 const About = lazy(() => import('./pages/About'));
 const Settings = lazy(() => import('./pages/Settings'));
 const Habits = lazy(() => import('./pages/Habits'));
 const Insights = lazy(() => import('./pages/Insights'));
+const Journal = lazy(() => import('./pages/Journal')); // Add this
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 export const PageLoader = () => (
@@ -32,20 +35,23 @@ const App = () => (
         <TaskProvider>
           <TimerProviderWithTasks>
             <HabitProvider>
-              <Toaster />
-              <Sonner />
-              <Suspense fallback={<PageLoader />}>
-                <Routes >
-                  <Route element={<Layout />}>
-                    <Route path="/" element={<Index />} />
-                    <Route path="/about" element={<About />} />
-                    <Route path="/settings" element={<Settings />} />
-                    <Route path="/habits" element={<Habits />} />
-                    <Route path="/insights" element={<Insights />} />
-                    <Route path="*" element={<NotFound />} />
-                  </Route>
-                </Routes>
-              </Suspense>
+              <JournalProvider> {/* Add this */}
+                <Toaster />
+                <Sonner richColors position="top-left" />
+                <Suspense fallback={<PageLoader />}>
+                  <Routes>
+                    <Route element={<Layout />}>
+                      <Route path="/" element={<Index />} />
+                      <Route path="/about" element={<About />} />
+                      <Route path="/settings" element={<Settings />} />
+                      <Route path="/habits" element={<Habits />} />
+                      <Route path="/insights" element={<Insights />} />
+                      <Route path="/journal" element={<Journal />} /> {/* Add this */}
+                      <Route path="*" element={<NotFound />} />
+                    </Route>
+                  </Routes>
+                </Suspense>
+              </JournalProvider>
             </HabitProvider>
           </TimerProviderWithTasks>
         </TaskProvider>

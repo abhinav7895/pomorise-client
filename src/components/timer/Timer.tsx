@@ -210,20 +210,20 @@ const Timer: React.FC = () => {
           pathClassName={cn(getProgressColor(), pulseAnimation)}
         >
           <div className="flex flex-col items-center">
-            <div className="text-6xl font-light text-[var(--timer-text)] timer-text mb-2">
-              {formatTime(timeRemaining)}
-            </div>
-            {activeTask ? (
-              <div className="text-sm text-muted-foreground flex items-center">
-                <ListTodo className="w-3 h-3 mr-1" />
-                <span className="font-medium">{activeTask.title}</span>
-              </div>
-            ) : (
-              <div className="text-sm text-muted-foreground flex items-center opacity-60">
-                <Clock className="w-3 h-3 mr-1" />
-                <span>No active task</span>
-              </div>
-            )}
+        <div className="text-6xl font-light text-[var(--timer-text)] timer-text mb-2">
+          {formatTime(timeRemaining)}
+        </div>
+        {activeTask ? (
+          <div className="text-sm text-muted-foreground flex items-center max-w-[200px]">
+            <ListTodo className="w-3 h-3 mr-1 flex-shrink-0" />
+            <span className="font-medium truncate">{activeTask.title}</span>
+          </div>
+        ) : (
+          <div className="text-sm text-muted-foreground flex items-center opacity-60">
+            <Clock className="w-3 h-3 mr-1" />
+            <span>No active task</span>
+          </div>
+        )}
           </div>
         </CircularProgress>
       </motion.div>
