@@ -14,6 +14,8 @@ interface TimerSettings {
   longBreakInterval: number;
   autoStartBreaks: boolean;
   autoStartPomodoros: boolean;
+  alarmEnabled: boolean;
+  selectedAlarm: string;
 }
 
 interface StoredTimerState {
@@ -51,6 +53,8 @@ const defaultSettings: TimerSettings = {
   longBreakInterval: 4, 
   autoStartBreaks: true,
   autoStartPomodoros: true,
+  alarmEnabled: true, 
+  selectedAlarm: 'Alarm Bell.mp3',
 };
 
 const getDurationByMode = (mode: TimerMode, settingsObj: TimerSettings) => {
@@ -214,6 +218,13 @@ const TimerProviderInternal: React.FC<{
     const musicPlayer = getFocusMusicPlayer();
     if (musicPlayer.getIsPlaying()) {
       musicPlayer.fadeOut();
+    }
+
+    if (settings.alarmEnabled) {
+      const alarm = new Audio(`/audio/${settings.selectedAlarm}`);
+      alarm.play().catch((error) => {
+        console.error('Error playing alarm:', error);
+      });
     }
     
     showNotification();

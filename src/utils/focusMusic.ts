@@ -1,5 +1,10 @@
-export const musicTracks = [
+export interface MusicTrack {
+  name: string;
+  src: string;
+  type: string;
+}
 
+export const musicTracks: MusicTrack[] = [
   {
     name: "Ambient Focus",
     src: "https://8n5cq3g9tjckydmy.public.blob.vercel-storage.com/ambient-xK7iqq8cVO1fzzDbwscAQ5WDfTD7ed.mp3",
@@ -24,7 +29,6 @@ export class FocusMusicPlayer {
     if (!this.audio) return;
     
     this.audio.volume = 0.7;
-    
     this.setTrack(0);
   }
 
@@ -38,7 +42,6 @@ export class FocusMusicPlayer {
 
   public play() {
     if (!this.audio) return;
-
     this.audio.play().catch(e => {
       console.log('Audio play failed:', e);
     });
@@ -88,7 +91,6 @@ export class FocusMusicPlayer {
     if (!this.audio) return;
     
     this.audio.volume = 0;
-    
     this.play();
     
     if (this.fadeInterval) {
@@ -127,15 +129,17 @@ export class FocusMusicPlayer {
     return !this.audio.paused;
   }
 
-  public getCurrentTrack() {
+  public getIsPaused(): boolean {
+    if (!this.audio) return false;
+    return this.audio.paused;
+  }
+
+  public getCurrentTrack(): MusicTrack {
     return musicTracks[this.currentTrack];
   }
 
   public nextTrack() {
     this.setTrack(this.currentTrack + 1);
-    if (this.getIsPlaying()) {
-      this.play();
-    }
   }
 }
 
