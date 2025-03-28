@@ -230,7 +230,8 @@ const Settings: React.FC = () => {
           </Card>
         </motion.div>
 
-        <motion.div variants={item}>
+        
+        {/* <motion.div variants={item}>
           <Card>
             <CardHeader>
               <CardTitle>Account & Sync</CardTitle>
@@ -384,7 +385,7 @@ const Settings: React.FC = () => {
               </div>
             </CardContent>
           </Card>
-        </motion.div>
+        </motion.div> */}
 
         <motion.div variants={item}>
           <Card>
