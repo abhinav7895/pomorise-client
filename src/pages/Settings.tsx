@@ -23,7 +23,7 @@ import axios from 'axios';
 import { useToast } from '@/components/ui/use-toast';
 import { create } from 'zustand';
 
-const API_URL = process.env.VITE_BACKEND_URL || 'http://localhost:3000';
+const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
 
 interface TimerSettings {
   alarmEnabled: boolean;
