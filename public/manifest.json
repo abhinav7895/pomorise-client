@@ -41,6 +41,12 @@
         "platform": "wide",
         "form_factor" : "wide",
         "label": "Pomorise Timer Dashboard"
+      },
+      {
+        "src": "/screenshots/screen2.png",
+        "sizes": "1170x2532",
+        "type": "image/png",
+        "label": "Pomorise Timer Dashboard"
       }
     ]
   }
