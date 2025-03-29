@@ -78,7 +78,7 @@ const  isMobile = useIsMobile()
 
   return (
     <AnimatePresence>
-      {showPrompt && isMobile && (
+      {showPrompt && (
         <motion.div
           variants={promptVariants}
           initial="hidden"
