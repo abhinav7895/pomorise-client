@@ -83,7 +83,7 @@ const Settings: React.FC = () => {
       <motion.div className="space-y-8 animate-fade-in" variants={container} initial="hidden" animate="show" role="main">
         <motion.h1 variants={item} className="text-2xl font-semibold">Settings</motion.h1>
 
-        {showInstallButton && (
+        { (
           <motion.div variants={item}>
             <Card>
               <CardHeader>
