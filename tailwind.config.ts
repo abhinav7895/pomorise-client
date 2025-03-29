@@ -126,6 +126,7 @@ export default {
         "exit": "fade-out 0.3s ease-out, scale-out 0.2s ease-out",
         "pulse-slow": "pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite",
         "breathe": "breathe 8s ease-in-out infinite",
+        'spin-fast': 'spin 500ms linear infinite',
       },
     },
   },

@@ -101,7 +101,6 @@ const Layout: React.FC = () => {
       </footer>
 
       {/* Footer Credit */}
-      <div className='mx-auto'>
       <div className="text-center text-sm text-gray-500 py-4">
         Made with ❤️ by{' '}
         <a 
@@ -112,11 +111,6 @@ const Layout: React.FC = () => {
         >
           Abhinav Yadav
         </a>
-      </div>
-      <div className='flex flex-col items-center gap-2 justify-center mt-10'>
-        <img src="./logo.svg" alt="Pomorise Logo" className='size-10' />
-        <div className=" font-semibold text-xl sm:text-2xl">Pomorise</div>
-      </div>
       </div>
     </div>
   );
