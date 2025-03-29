@@ -47,6 +47,24 @@
         "sizes": "1170x2532",
         "type": "image/png",
         "label": "Pomorise Timer Dashboard"
+      },
+      {
+        "src": "/screenshots/screen3.png",
+        "sizes": "1170x2532",
+        "type": "image/png",
+        "label": "Pomorise Insights"
+      },
+      {
+        "src": "/screenshots/screen4.png",
+        "sizes": "1170x2532",
+        "type": "image/png",
+        "label": "Pomorise Journal"
+      },
+      {
+        "src": "/screenshots/screen5.png",
+        "sizes": "1170x2532",
+        "type": "image/png",
+        "label": "Pomorise Habits Builder"
       }
     ]
   }
