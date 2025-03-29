@@ -20,11 +20,7 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 
 export const PageLoader = () => (
   <div className="fixed select-none flex-col inset-0 flex items-center justify-center bg-background/50 z-50">
-    <div className='flex flex-col items-center gap-2 justify-center mt-10'>
-      <img src="./logo.svg" alt="Pomorise Logo" className='size-6 sm:size-8' />
-      <div className=" font-semibold text-base sm:text-lg">Pomorise</div>
-    </div>
-    <Loader2 className="size-5 mt-3 animate-spin-fast text-[#e64637da]" />
+    <Loader2 className="size-8 mt-3 animate-spin-fast text-primary" />
   </div>
 );
 

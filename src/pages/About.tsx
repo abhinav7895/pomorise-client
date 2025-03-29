@@ -11,8 +11,9 @@ const About: React.FC = () => {
         canonicalUrl="https://pomorise.vercel.app/about"
       />
       <div className="mx-auto animate-fade-in">
-        <h1 className="text-2xl font-semibold mb-6">About Pomorise</h1>
-        
+        <h1 className="text-2xl font-semibold flex gap-3 mb-6">About Pomorise                 <img src="./logo.svg" alt="Pomorise Logo" className='size-8' />
+        </h1>
+
         <div className="space-y-6">
           <section>
             <h2 className="text-xl font-medium mb-3">The Pomodoro Technique</h2>
@@ -20,7 +21,7 @@ const About: React.FC = () => {
               The Pomodoro Technique, developed by Francesco Cirillo in the late 1980s, is a time management method that breaks work into focused intervals (typically 25 minutes) separated by short breaks. Pomorise builds on this foundation to supercharge your productivity.
             </p>
           </section>
-          
+
           <section>
             <h2 className="text-xl font-medium mb-3">How to Use Pomorise</h2>
             <ol className="list-decimal list-inside space-y-2 text-muted-foreground">
@@ -32,7 +33,7 @@ const About: React.FC = () => {
               <li>Track habits, get AI-powered insights, and journal your progress</li>
             </ol>
           </section>
-          
+
           <section>
             <h2 className="text-xl font-medium mb-3">Features</h2>
             <ul className="list-disc list-inside space-y-2 text-muted-foreground">
@@ -46,21 +47,42 @@ const About: React.FC = () => {
               <li>Settings to tailor your experience (timer, notifications, sound)</li>
             </ul>
           </section>
-          
-          <section className="pt-4 border-t border-border">
+
+          <section className="pt-4 border-t border-border border-dashed">
             <p className="text-sm text-muted-foreground">
               Pomorise is designed to help you master your time, build lasting habits, and gain deep insights into your productivity—all in one place, enhanced by AI-driven analysis.
               <br />
-              <a 
-                href="https://en.wikipedia.org/wiki/Pomodoro_Technique" 
+              <a
+                href="https://en.wikipedia.org/wiki/Pomodoro_Technique"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center text-primary hover:underline"
               >
-                Learn more about the Pomodoro Technique 
+                Learn more about the Pomodoro Technique
               </a>
             </p>
           </section>
+          <section className="pt-4 border-t border-border border-dashed">
+            <div className='mx-auto mt-4'>
+              <div className="text-center text-sm text-gray-500 py-4">
+                Made with ❤️ by{' '}
+                <a
+                  href="https://abhinavyadav.in"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline"
+                >
+                  Abhinav Yadav
+                </a>
+              </div>
+              <div className='flex flex-col items-center gap-2 justify-center mt-8'>
+                <img src="./logo.svg" alt="Pomorise Logo" className='size-10' />
+                <div className=" font-semibold text-xl sm:text-2xl">Pomorise</div>
+              </div>
+            </div>
+          </section>
+
+
         </div>
       </div>
     </>
