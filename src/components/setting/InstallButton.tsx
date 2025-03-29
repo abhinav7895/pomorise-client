@@ -6,31 +6,45 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Logo from '/logo.svg'; // Adjust path if needed
 import { useIsMobile } from '@/hooks/use-mobile';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let deferredPrompt: any;
+interface BeforeInstallPromptEvent extends Event {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+}
 
 const InstallPrompt: React.FC = () => {
   const [showPrompt, setShowPrompt] = useState(false);
-const  isMobile = useIsMobile()
+  const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const isMobile = useIsMobile();
+  
   useEffect(() => {
-    // Check if prompt has been shown before
+    // Check if app is already installed
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      return;
+    }
+    
+    // Check if prompt has been shown before in this session
     const hasShownPrompt = localStorage.getItem('hasShownInstallPrompt');
-    if (hasShownPrompt) return;
+    if (hasShownPrompt === 'true') return;
 
     const handleBeforeInstallPrompt = (event: Event) => {
+      // Prevent Chrome 76+ from automatically showing the prompt
       event.preventDefault();
-      deferredPrompt = event;
       
-      // Only show if not in standalone mode
-      if (!window.matchMedia('(display-mode: standalone)').matches) {
-        setShowPrompt(true);
-      }
+      // Store the event for later use
+      const promptEvent = event as BeforeInstallPromptEvent;
+      setInstallPrompt(promptEvent);
+      
+      // Show the prompt UI
+      setShowPrompt(true);
+      
+      console.log('Install prompt captured and ready');
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
 
     // Hide prompt if app is installed
     window.addEventListener('appinstalled', () => {
+      console.log('App was installed');
       setShowPrompt(false);
       localStorage.setItem('hasShownInstallPrompt', 'true');
     });
@@ -41,21 +55,45 @@ const  isMobile = useIsMobile()
   }, []);
 
   const handleInstallClick = async () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      
-      if (outcome === 'accepted') {
-        setShowPrompt(false);
-        localStorage.setItem('hasShownInstallPrompt', 'true');
+    console.log('Install button clicked, prompt available:', !!installPrompt);
+    
+    if (installPrompt) {
+      try {
+        // Show the prompt
+        await installPrompt.prompt();
+        
+        // Wait for the user to respond to the prompt
+        const choiceResult = await installPrompt.userChoice;
+        
+        console.log('User installation choice:', choiceResult.outcome);
+        
+        if (choiceResult.outcome === 'accepted') {
+          console.log('User accepted the install prompt');
+          setShowPrompt(false);
+        } else {
+          console.log('User dismissed the install prompt');
+        }
+        
+        // Clear the saved prompt as it can only be used once
+        setInstallPrompt(null);
+      } catch (error) {
+        console.error('Error during installation process:', error);
       }
-      deferredPrompt = null;
+    } else {
+      console.warn('Install prompt not available');
+      
+      // For iOS devices that don't support the beforeinstallprompt event
+      if (navigator.userAgent.match(/iPhone|iPad|iPod/)) {
+        alert('To install this app on your iOS device: tap the share button and then "Add to Home Screen"');
+      }
     }
   };
 
   const handleDismiss = () => {
     setShowPrompt(false);
-    localStorage.setItem('hasShownInstallPrompt', 'true');
+    // We'll set a session marker but not a permanent one
+    // This way the prompt can appear again next time
+    sessionStorage.setItem('hasShownInstallPrompt', 'true');
   };
 
   const promptVariants = {
@@ -81,7 +119,7 @@ const  isMobile = useIsMobile()
 
   return (
     <AnimatePresence>
-      {showPrompt && isMobile && (
+      {showPrompt && (
         <motion.div
           variants={promptVariants}
           initial="hidden"
@@ -100,10 +138,10 @@ const  isMobile = useIsMobile()
             <div className="flex items-center space-x-2 flex-shrink-0">
               <Button
                 onClick={handleInstallClick}
-                className="flex items-center gap-2 text-xs sm:text-sm px-3 sm:px-4 py-1 sm:py-2 w-8 h-8 sm:w-fit sm:h-10 text-[#ffffffbf] border border-[#e6463773] border-dashed  bg-[#e6463736] hover:bg-[#e64637bf]"
+                className="flex items-center gap-2 text-xs sm:text-sm px-3 sm:px-4 py-1 sm:py-2 w-8 h-8 sm:w-fit sm:h-10 text-[#ffffffbf] border border-[#e6463773] border-dashed bg-[#e6463736] hover:bg-[#e64637bf]"
                 variant="default"
               >
-                <Download className="w-3 h-3 sm:w-4 sm:h-4 " />
+                <Download className="w-3 h-3 sm:w-4 sm:h-4" />
                 <span className='hidden sm:block'>Install</span>
               </Button>
               <Button
