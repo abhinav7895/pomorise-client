@@ -10,6 +10,9 @@ import { HabitProvider } from "./context/HabitContext";
 import { JournalProvider } from "./context/JournalContext";
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Layout from './components/layout/Layout';
+import InstallPrompt from './components/setting/InstallButton';
+
+
 const Index = lazy(() => import('./pages/Index'));
 const About = lazy(() => import('./pages/About'));
 const Settings = lazy(() => import('./pages/Settings'));
@@ -24,7 +27,6 @@ export const PageLoader = () => (
   </div>
 );
 
-
 const App = () => (
   <BrowserRouter>
     <ThemeProvider>
@@ -35,17 +37,18 @@ const App = () => (
               <JournalProvider>
                 <Toaster />
                 <Sonner richColors position="top-left" />
-                  <Routes>
-                    <Route element={<Layout />}>
-                      <Route path="/" element={<Index />} />
-                      <Route path="/about" element={<About />} />
-                      <Route path="/settings" element={<Settings />} />
-                      <Route path="/habits" element={<Habits />} />
-                      <Route path="/insights" element={<Insights />} />
-                      <Route path="/journal" element={<Journal />} />
-                      <Route path="*" element={<NotFound />} />
-                    </Route>
-                  </Routes>
+                <Routes>
+                  <Route element={<Layout />}>
+                    <Route path="/" element={<Index />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/settings" element={<Settings />} />
+                    <Route path="/habits" element={<Habits />} />
+                    <Route path="/insights" element={<Insights />} />
+                    <Route path="/journal" element={<Journal />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Route>
+                </Routes>
+                <InstallPrompt />
               </JournalProvider>
             </HabitProvider>
           </TimerProviderWithTasks>

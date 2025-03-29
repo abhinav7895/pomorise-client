@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import TimerSettings from '@/components/timer/TimerSettings';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,15 +9,17 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useTimer } from '@/context/TimerContext';
 import { motion } from 'framer-motion';
 import SEO from '@/components/SEO';
-
 import { useUserStore } from '@/store/userStore';
 import AuthDialog from '@/components/setting/AuthDialog';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let deferredPrompt: any;
 
 const Settings: React.FC = () => {
   const [isTimerSettingsOpen, setIsTimerSettingsOpen] = useState(false);
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [showInstallButton, setShowInstallButton] = useState(false);
   const { settings, updateSettings } = useTimer();
   const { user } = useUserStore();
 
@@ -36,6 +38,39 @@ const Settings: React.FC = () => {
     hidden: { opacity: 0, y: 20 },
     show: { opacity: 1, y: 0 },
   };
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (event: Event) => {
+      event.preventDefault();
+      deferredPrompt = event;
+      setShowInstallButton(true);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    window.addEventListener('appinstalled', () => {
+      setShowInstallButton(false);
+    });
+
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      setShowInstallButton(false);
+    }
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      
+      if (outcome === 'accepted') {
+        setShowInstallButton(false);
+      }
+      deferredPrompt = null;
+    }
+  };
 
   return (
     <>
@@ -47,6 +82,20 @@ const Settings: React.FC = () => {
       />
       <motion.div className="space-y-8 animate-fade-in" variants={container} initial="hidden" animate="show" role="main">
         <motion.h1 variants={item} className="text-2xl font-semibold">Settings</motion.h1>
+
+        {showInstallButton && (
+          <motion.div variants={item}>
+            <Card>
+              <CardHeader>
+                <CardTitle>Install App</CardTitle>
+                <CardDescription>Install this application to your device for a better experience</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button onClick={handleInstallClick}>Install Now</Button>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
 
         {/* Timer Settings Card */}
         <motion.div variants={item}>
@@ -62,7 +111,7 @@ const Settings: React.FC = () => {
           </Card>
         </motion.div>
 
-        {/* Account & Sync Card */}
+           {/* Account & Sync Card */}
         {/* <motion.div variants={item}>
           <Card>
             <CardHeader>
