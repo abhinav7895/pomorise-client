@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Timer from '@/components/timer/Timer';
 import TaskList from '@/components/tasks/TaskList';
 import JournalList from '@/components/journal/JournalList'; 
@@ -11,8 +11,12 @@ import { Button } from '@/components/ui/button';
 import { ArrowRightCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import SEO from '@/components/SEO';
+import { useTimer } from '@/context/TimerContext';
+import { cn } from '@/lib/utils';
 
 const Index = () => {
+  const { timerMode } = useTimer();
+  
   React.useEffect(() => {
     requestNotificationPermission();
     registerServiceWorker();
@@ -41,16 +45,33 @@ const Index = () => {
     }
   };
 
+  const getThemeClass = () => {
+    switch (timerMode) {
+      case 'focus':
+        return 'timer-focus-theme';
+      case 'shortBreak':
+        return 'timer-short-break-theme';
+      case 'longBreak':
+        return 'timer-long-break-theme';
+      default:
+        return 'timer-focus-theme';
+    }
+  };
+
   return (
     <>
       <SEO
-        title="Pomodoro Timer - Boost Productivity with Task & Habit Tracking"
+        title="Pomorise - Pomodoro Timer - Boost Productivity with Task & Habit Tracking"
         description="Enhance your focus and productivity with our free Pomodoro timer app. Features task management, habit tracking, and performance insights."
         keywords="pomodoro timer, productivity app, task management, habit tracker, time management"
         canonicalUrl="https://pomorise.vercel.app/"
       />
       <motion.div 
-        className="flex flex-col gap-6 mx-auto"
+        className={cn(
+          "flex flex-col gap-6 mx-auto transition-colors duration-500",
+          getThemeClass(),
+          "bg-[var(--timer-bg)]"
+        )}
         variants={containerVariants}
         initial="hidden"
         animate="visible"

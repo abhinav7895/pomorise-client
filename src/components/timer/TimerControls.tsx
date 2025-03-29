@@ -7,11 +7,12 @@ import clickSoundFile from '/audio/button-click.mp3';
 
 interface TimerControlsProps {
   timerState: 'idle' | 'running' | 'paused' | 'finished';
-  onStart: (isManual?: boolean) => void; // Add isManual flag
-  onPause: (isManual?: boolean) => void; // Add isManual flag
+  onStart: (isManual?: boolean) => void;
+  onPause: (isManual?: boolean) => void;
   onReset: () => void;
   onSkip: () => void;
   timerMode: TimerMode;
+  isFullScreen?: boolean;
 }
 
 const TimerControls: React.FC<TimerControlsProps> = ({
@@ -21,6 +22,7 @@ const TimerControls: React.FC<TimerControlsProps> = ({
   onReset,
   onSkip,
   timerMode,
+  isFullScreen = false,
 }) => {
   const clickSoundRef = useRef(new Audio(clickSoundFile));
 
@@ -28,18 +30,30 @@ const TimerControls: React.FC<TimerControlsProps> = ({
     switch (timerMode) {
       case 'focus':
         return {
-          primary: 'bg-timer-focus/20 hover:bg-timer-focus/40 border-timer-focus text-white',
-          secondary: 'border-timer-focus text-timer-focus hover:bg-timer-focus/10',
+          primary: isFullScreen 
+            ? 'bg-timer-focus/30 hover:bg-timer-focus/50 border-timer-focus text-white' 
+            : 'bg-timer-focus/20 hover:bg-timer-focus/40 border-timer-focus text-white',
+          secondary: isFullScreen
+            ? 'border-timer-focus text-timer-focus hover:bg-timer-focus/20'
+            : 'border-timer-focus text-timer-focus hover:bg-timer-focus/10',
         };
       case 'shortBreak':
         return {
-          primary: 'bg-timer-short-break/20 hover:bg-timer-short-breaks/40 border-timer-short-break text-white',
-          secondary: 'border-timer-short-break text-timer-short-break hover:bg-timer-short-break/10',
+          primary: isFullScreen
+            ? 'bg-timer-short-break/30 hover:bg-timer-short-break/50 border-timer-short-break text-white'
+            : 'bg-timer-short-break/20 hover:bg-timer-short-breaks/40 border-timer-short-break text-white',
+          secondary: isFullScreen
+            ? 'border-timer-short-break text-timer-short-break hover:bg-timer-short-break/20'
+            : 'border-timer-short-break text-timer-short-break hover:bg-timer-short-break/10',
         };
       case 'longBreak':
         return {
-          primary: 'bg-timer-long-break/20 hover:bg-timer-long-break/40 border-timer-long-break text-white',
-          secondary: 'border-timer-long-break text-timer-long-break hover:bg-timer-long-break/10',
+          primary: isFullScreen
+            ? 'bg-timer-long-break/30 hover:bg-timer-long-break/50 border-timer-long-break text-white'
+            : 'bg-timer-long-break/20 hover:bg-timer-long-break/40 border-timer-long-break text-white',
+          secondary: isFullScreen
+            ? 'border-timer-long-break text-timer-long-break hover:bg-timer-long-break/20'
+            : 'border-timer-long-break text-timer-long-break hover:bg-timer-long-break/10',
         };
       default:
         return {
@@ -60,12 +74,12 @@ const TimerControls: React.FC<TimerControlsProps> = ({
 
   const handleStartClick = () => {
     playClickSound();
-    onStart(true); // Pass isManual=true for manual start
+    onStart(true);
   };
 
   const handlePauseClick = () => {
     playClickSound();
-    onPause(true); // Pass isManual=true for manual pause
+    onPause(true);
   };
 
   return (
@@ -76,7 +90,8 @@ const TimerControls: React.FC<TimerControlsProps> = ({
           variant="outline"
           className={cn(
             "button-hover-effect button-active-effect p-3 h-auto border-dashed shadow-lg transition-all duration-300",
-            themeStyles.primary
+            themeStyles.primary,
+            isFullScreen && "px-6 py-4 text-lg bg-neutral-950 border-neutral-800 text-neutral-200 hover:bg-neutral-900"
           )}
           aria-label="Pause Timer"
         >
@@ -89,7 +104,8 @@ const TimerControls: React.FC<TimerControlsProps> = ({
           variant="outline"
           className={cn(
             "button-hover-effect button-active-effect p-3 border-dashed h-auto shadow-lg transition-all duration-300",
-            themeStyles.primary
+            themeStyles.primary,
+            isFullScreen && "px-6 py-4 text-lg bg-neutral-950 border-neutral-800 text-neutral-200 hover:bg-neutral-900"
           )}
           aria-label="Start Timer"
         >
@@ -103,7 +119,8 @@ const TimerControls: React.FC<TimerControlsProps> = ({
         variant="outline"
         className={cn(
           "border-dashed p-3 h-auto transition-all duration-300",
-          themeStyles.secondary
+          themeStyles.secondary,
+          isFullScreen && "px-6 py-4 text-lg bg-neutral-950 border-neutral-800 text-neutral-200 hover:bg-neutral-900"
         )}
         aria-label="Reset Timer"
       >
@@ -115,7 +132,8 @@ const TimerControls: React.FC<TimerControlsProps> = ({
         variant="outline"
         className={cn(
           "border-dashed p-3 h-auto transition-all duration-300",
-          themeStyles.secondary
+          themeStyles.secondary,
+          isFullScreen && "px-6 py-4 text-lg bg-neutral-950 border-neutral-800 text-neutral-200 hover:bg-neutral-900"
         )}
         aria-label="Skip Timer"
       >

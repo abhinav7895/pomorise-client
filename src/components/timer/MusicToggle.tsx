@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { getFocusMusicPlayer } from '@/utils/focusMusic';
+import { getFocusMusicPlayer, musicTracks } from '@/utils/focusMusic';
 import { useTimer } from '@/context/TimerContext';
 import { Music, Volume2, SkipForward, Pause, Play } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
-const MusicToggle = () => {
+const MusicToggle = ({isFullScreen} : {isFullScreen : boolean}) => {
   const { timerState, timerMode } = useTimer();
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMusicPaused, setIsMusicPaused] = useState(() => {
@@ -54,14 +55,12 @@ const MusicToggle = () => {
     setCurrentTrackName(track.name);
   };
 
-  // Handle timer state changes
   useEffect(() => {
     if (timerMode !== 'focus' || timerState === 'finished' || timerState === 'idle') {
       if (isPlaying) {
         stopMusic();
       }
     } else if (timerState === 'running' && !isMusicPaused && !isPlaying) {
-      // Only start music if user has explicitly unpaused it before
       musicPlayer.fadeIn();
       setIsPlaying(true);
       updateTrackInfo();
@@ -80,7 +79,11 @@ const MusicToggle = () => {
               onClick={toggleMusic}
               size="sm"
               variant="ghost"
-              className="text-muted-foreground hover:text-foreground transition-colors"
+              className={
+                cn("text-muted-foreground hover:text-foreground transition-colors",
+                  isFullScreen && "text-neutral-200 border border-neutral-800 hover:bg-transparent hover:text-white"
+                )
+              }
               disabled={timerMode !== 'focus' || timerState === 'idle'}
             >
               {isPlaying ? (
@@ -105,14 +108,18 @@ const MusicToggle = () => {
             className="flex items-center"
           >
             <span className="text-xs text-muted-foreground mr-1">{currentTrackName}</span>
-            <TooltipProvider>
+            {/* <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
                     onClick={nextTrack}
                     size="sm"
                     variant="ghost"
-                    className="h-7 w-7 p-0"
+                    className={
+                      cn("text-muted-foreground hover:text-foreground transition-colors",
+                        isFullScreen && "text-neutral-200 border border-neutral-800 hover:bg-transparent hover:text-white"
+                      )
+                    }
                     disabled={isMusicPaused || timerState !== 'running'}
                   >
                     <SkipForward size={14} />
@@ -122,7 +129,7 @@ const MusicToggle = () => {
                   Next track
                 </TooltipContent>
               </Tooltip>
-            </TooltipProvider>
+            </TooltipProvider> */}
           </motion.div>
         )}
       </AnimatePresence>

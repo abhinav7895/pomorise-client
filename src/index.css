@@ -110,22 +110,23 @@
   }
   
   .timer-focus-theme {
-    --timer-bg: hsl(var(--timer-focus) / 0.1);
     --timer-border: hsl(var(--timer-focus) / 0.2);
     --timer-text: hsl(var(--timer-focus));
+    @apply bg-[#051a2f08] border-[#0d2d4d];
   }
-  
+    
   .timer-short-break-theme {
-    --timer-bg: hsl(var(--timer-short-break) / 0.1);
     --timer-border: hsl(var(--timer-short-break) / 0.2);
     --timer-text: hsl(var(--timer-short-break));
+    @apply bg-[#03271108] border-[#0b4621];
   }
-  
+    
   .timer-long-break-theme {
-    --timer-bg: hsl(var(--timer-long-break) / 0.1);
     --timer-border: hsl(var(--timer-long-break) / 0.2);
     --timer-text: hsl(var(--timer-long-break));
+    @apply bg-[#06303608] border-[#0a363c];
   }
+  
 }
 
 .circular-progress {
