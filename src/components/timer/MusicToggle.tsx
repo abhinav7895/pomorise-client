@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { getFocusMusicPlayer, musicTracks } from '@/utils/focusMusic';
 import { useTimer } from '@/context/TimerContext';
-import { Music, Volume2, SkipForward, Pause, Play } from 'lucide-react';
+import { Music, Pause, Play, SkipForward } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -105,7 +105,7 @@ const MusicToggle = ({isFullScreen} : {isFullScreen : boolean}) => {
             initial={{ opacity: 0, width: 0 }}
             animate={{ opacity: 1, width: 'auto' }}
             exit={{ opacity: 0, width: 0 }}
-            className="flex items-center"
+            className="hidden sm:flex items-center"
           >
             <span className="text-xs text-muted-foreground mr-1">{currentTrackName}</span>
             {/* <TooltipProvider>
