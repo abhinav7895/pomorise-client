@@ -13,7 +13,7 @@ const manifestForPlugIn = {
     description: "A productivity timer with task and habit tracking",
     start_url: "/",
     display: "standalone" as const,
-    background_color: "#ffffff",
+    background_color: "#000000",
     theme_color: "#0f172a",
     icons: [
       {
