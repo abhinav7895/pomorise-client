@@ -78,10 +78,10 @@ const About: React.FC = () => {
                 </a>
               </div>
               <div className='flex flex-col items-center gap-2 justify-center mt-8'>
-              <AnimatedLogo height={90} width={90} isProcessing={true} />
+                <AnimatedLogo height={90} width={90} isProcessing={true} />
 
-                
-                                <div className=" font-semibold text-4xl">Pomorise</div>
+
+                <div className=" font-semibold text-4xl">Pomorise</div>
               </div>
             </div>
           </section>

@@ -220,6 +220,9 @@ const Settings: React.FC = () => {
             </CardContent>
           </Card>
         </motion.div>
+        <motion.div variants={item} className="pt-4 text-center text-sm text-muted-foreground">
+          <p>You can visit the <a href="/about" className="text-primary hover:underline">About page</a> to learn more about this app.</p>
+        </motion.div>
       </motion.div>
       <AuthDialog open={dialogOpen} setOpen={setDialogOpen} />
     </>
