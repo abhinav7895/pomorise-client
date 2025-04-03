@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Timer from '@/components/timer/Timer';
 import TaskList from '@/components/tasks/TaskList';
 import JournalList from '@/components/journal/JournalList';
@@ -12,9 +12,16 @@ import { Link } from 'react-router-dom';
 import SEO from '@/components/SEO';
 import { useTimer } from '@/context/TimerContext';
 import { cn } from '@/lib/utils';
+import { Input } from '@/components/ui/input';
+import { useAI } from '@/context/AIContext';
+import { Loader2 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 const Index = () => {
   const { timerMode } = useTimer();
+  const { processText } = useAI();
+  const [prompt, setPrompt] = useState('');
+  const { toast } = useToast();
 
   useEffect(() => {
     requestNotificationPermission();
@@ -34,6 +41,22 @@ const Index = () => {
     }
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!prompt.trim()) return;
+    
+    try {
+      await processText(prompt);
+      setPrompt('');
+    } catch (error) {
+      toast({
+        title: 'Error processing prompt',
+        description: 'Failed to determine action from your input',
+        variant: 'destructive',
+      });
+    }
+  };
+
   return (
     <>
       <SEO
@@ -49,27 +72,18 @@ const Index = () => {
           "bg-[var(--timer-bg)]"
         )}
       >
-        <div
-
-          className="w-full"
-        >
+        <div className="w-full">
           <Timer />
         </div>
 
-        <div
-
-          className="w-full"
-        >
+        <div className="w-full">
           <div className="mb-4">
             <h2 className="text-2xl font-bold">All Tasks</h2>
           </div>
           <TaskList />
         </div>
 
-        <div
-
-          className="w-full"
-        >
+        <div className="w-full">
           <div className="mb-4">
             <h2 className="text-2xl font-bold">All Journal</h2>
           </div>
@@ -77,9 +91,7 @@ const Index = () => {
         </div>
 
         <div className="gap-6 w-full mb-6">
-          <div
-
-          >
+          <div>
             <div className="flex flex-col h-full">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-bold">My Habits</h2>
@@ -94,9 +106,7 @@ const Index = () => {
           </div>
         </div>
 
-        <div
-          className="w-full"
-        >
+        <div className="w-full">
           <StreakCalendar />
         </div>
       </div>

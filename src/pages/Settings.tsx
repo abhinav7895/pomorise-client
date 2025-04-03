@@ -11,6 +11,9 @@ import { motion } from 'framer-motion';
 import SEO from '@/components/SEO';
 import { useUserStore } from '@/store/userStore';
 import AuthDialog from '@/components/setting/AuthDialog';
+import { VoiceAISettings } from '@/components/text-voice-assistant/assistant';
+import { useAI } from '@/context/AIContext';
+import { FlaskConical } from 'lucide-react';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let deferredPrompt: any;
@@ -22,6 +25,7 @@ const Settings: React.FC = () => {
   const [showInstallButton, setShowInstallButton] = useState(false);
   const { settings, updateSettings } = useTimer();
   const { user } = useUserStore();
+  const { settings: aiSetting, updateSettings: updateAISettings } = useAI();
 
   const alarmSounds = [
     { file: 'Alarm Bell.mp3', displayName: 'Alarm Bell' },
@@ -34,10 +38,12 @@ const Settings: React.FC = () => {
     hidden: { opacity: 0 },
     show: { opacity: 1, transition: { staggerChildren: 0.1 } },
   };
+  
   const item = {
     hidden: { opacity: 0, y: 20 },
     show: { opacity: 1, y: 0 },
   };
+  
   useEffect(() => {
     const handleBeforeInstallPrompt = (event: Event) => {
       event.preventDefault();
@@ -70,6 +76,10 @@ const Settings: React.FC = () => {
       }
       deferredPrompt = null;
     }
+  };
+
+  const handleVoiceAIToggle = () => {
+    updateAISettings({ enabled: !aiSetting.enabled });
   };
 
   return (
@@ -111,28 +121,35 @@ const Settings: React.FC = () => {
           </Card>
         </motion.div>
 
-           {/* Account & Sync Card */}
-        {/* <motion.div variants={item}>
+        {/* Voice & AI Assistant Card */}
+        <motion.div variants={item}>
           <Card>
             <CardHeader>
-              <CardTitle>Account & Sync</CardTitle>
-              <CardDescription>Manage your account and data synchronization</CardDescription>
+              <CardTitle className='flex items-center justify-between gap-1'>AI Assistant <span className='border-dashed border px-2 bg-neutral-900/40 text-neutral-700 border-neutral-700 text-xs'>Beta</span></CardTitle>
+              <CardDescription>Enable voice commands and AI processing</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label>Sync Data</Label>
+                  <Label htmlFor="voiceAIEnabled">AI Assistant</Label>
                   <div className="text-xs text-muted-foreground">
-                    Synchronize your data across devices
+                    Enable AI processing
                   </div>
                 </div>
-                <Button variant="outline" className="flex items-center gap-2" onClick={() => setDialogOpen(true)}>
-                  {user ? `Logged in as ${user.name || user.email}` : 'Sync Now'}
-                </Button>
+                <Switch
+                  id="aiEnabled"
+                  checked={aiSetting.enabled}
+                  onCheckedChange={handleVoiceAIToggle}
+                  aria-label="Toggle ai assistant"
+                />
               </div>
+              
+              {aiSetting.enabled && <Separator />}
+
+              <VoiceAISettings />
             </CardContent>
           </Card>
-        </motion.div> */}
+        </motion.div>
 
         {/* Notifications & Sounds Card */}
         <motion.div variants={item}>

@@ -1,10 +1,14 @@
 import React, { Suspense, useEffect } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import { Settings, Info, House, Brain, Target, BookOpen } from 'lucide-react';
+import { Settings, Info, House, Brain, Target, BookOpen, CheckSquare } from 'lucide-react';
 import { PageLoader } from '@/App';
+import AIAssistant from '../ai/AIAssitantModal';
+import { useAI } from '@/context/AIContext';
 
-const Layout: React.FC = () => {
+
+const Layout = () => {
   const location = useLocation();
+  const {settings} = useAI()
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -12,6 +16,7 @@ const Layout: React.FC = () => {
 
   const NavLinks = () => (
     <nav className="flex items-center md:gap-2 md:space-x-1 max-md:justify-between max-md:w-full">
+     {settings.enabled &&  <AIAssistant />}
       <Link
         to="/"
         className={`p-2 border border-dashed flex items-center gap-2 transition-colors ${location.pathname === '/'
@@ -40,6 +45,15 @@ const Layout: React.FC = () => {
         <BookOpen className='size-5 max-md:size-6' />
       </Link>
       <Link
+        to="/tasks"
+        className={`p-2 border border-dashed flex items-center gap-2 transition-colors ${location.pathname === '/tasks'
+            ? 'bg-primary/10 text-primary font-medium'
+            : 'hover:bg-secondary/80'
+          }`}
+      >
+        <CheckSquare className='size-5 max-md:size-6' />
+      </Link>
+      <Link
         to="/habits"
         className={`p-2 border border-dashed flex items-center gap-2 transition-colors ${location.pathname === '/habits'
             ? 'bg-primary/10 text-primary font-medium'
@@ -57,15 +71,8 @@ const Layout: React.FC = () => {
       >
         <Settings className='size-5 max-md:size-6' />
       </Link>
-      <Link
-        to="/about"
-        className={`p-2 border border-dashed flex items-center gap-2 transition-colors ${location.pathname === '/about'
-            ? 'bg-primary/10 text-primary font-medium'
-            : 'hover:bg-secondary/80'
-          }`}
-      >
-        <Info className='size-5 max-md:size-6' />
-      </Link>
+      
+
     </nav>
   );
 
@@ -93,7 +100,6 @@ const Layout: React.FC = () => {
           <NavLinks />
         </div>
       </footer>
-
     </div>
   );
 };

@@ -8,12 +8,15 @@ import { TimerProviderWithTasks } from "./context/TimerContext";
 import { TaskProvider } from "./context/TaskContext";
 import { HabitProvider } from "./context/HabitContext";
 import { JournalProvider } from "./context/JournalContext";
+import { AIProvider } from "./context/AIContext";
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import InstallPrompt from './components/setting/InstallButton';
 
 
+
 const Index = lazy(() => import('./pages/Index'));
+const Tasks = lazy(() => import('./pages/Tasks'));
 const About = lazy(() => import('./pages/About'));
 const Settings = lazy(() => import('./pages/Settings'));
 const Habits = lazy(() => import('./pages/Habits'));
@@ -35,20 +38,55 @@ const App = () => (
           <TimerProviderWithTasks>
             <HabitProvider>
               <JournalProvider>
-                <Toaster />
-                <Sonner richColors position="top-left" />
-                <Routes>
-                  <Route element={<Layout />}>
-                    <Route path="/" element={<Index />} />
-                    <Route path="/about" element={<About />} />
-                    <Route path="/settings" element={<Settings />} />
-                    <Route path="/habits" element={<Habits />} />
-                    <Route path="/insights" element={<Insights />} />
-                    <Route path="/journal" element={<Journal />} />
-                    <Route path="*" element={<NotFound />} />
-                  </Route>
-                </Routes>
-                <InstallPrompt />
+                <AIProvider>
+                  <Toaster />
+                  <Sonner richColors position="bottom-left" />
+                  <Routes>
+                    <Route element={<Layout />}>
+                      <Route path="/" element={
+                        <Suspense fallback={<PageLoader />}>
+                          <Index />
+                        </Suspense>
+                      } />
+                      <Route path="/about" element={
+                        <Suspense fallback={<PageLoader />}>
+                          <About />
+                        </Suspense>
+                      } />
+                      <Route path="/settings" element={
+                        <Suspense fallback={<PageLoader />}>
+                          <Settings />
+                        </Suspense>
+                      } />
+                      <Route path="/habits" element={
+                        <Suspense fallback={<PageLoader />}>
+                          <Habits />
+                        </Suspense>
+                      } />
+                      <Route path="/insights" element={
+                        <Suspense fallback={<PageLoader />}>
+                          <Insights />
+                        </Suspense>
+                      } />
+                      <Route path="/journal" element={
+                        <Suspense fallback={<PageLoader />}>
+                          <Journal />
+                        </Suspense>
+                      } />
+                      <Route path="/tasks" element={
+                        <Suspense fallback={<PageLoader />}>
+                          <Tasks />
+                        </Suspense>
+                      } />
+                      <Route path="*" element={
+                        <Suspense fallback={<PageLoader />}>
+                          <NotFound />
+                        </Suspense>
+                      } />
+                    </Route>
+                  </Routes>
+                  <InstallPrompt />
+                </AIProvider>
               </JournalProvider>
             </HabitProvider>
           </TimerProviderWithTasks>

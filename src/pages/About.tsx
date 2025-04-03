@@ -1,5 +1,6 @@
 import React from 'react';
 import SEO from '@/components/SEO';
+import AnimatedLogo from '@/components/ui/animated-logo';
 
 const About: React.FC = () => {
   return (
@@ -11,7 +12,8 @@ const About: React.FC = () => {
         canonicalUrl="https://pomorise.vercel.app/about"
       />
       <div className="mx-auto animate-fade-in">
-        <h1 className="text-2xl font-semibold flex gap-3 mb-6">About Pomorise                 <img src="./logo.svg" alt="Pomorise Logo" className='size-8' />
+        <h1 className="text-2xl font-semibold items-center flex gap-2 mb-6">About Pomorise                              <AnimatedLogo height={27} width={27} isProcessing={true} />
+
         </h1>
 
         <div className="space-y-6">
@@ -76,8 +78,10 @@ const About: React.FC = () => {
                 </a>
               </div>
               <div className='flex flex-col items-center gap-2 justify-center mt-8'>
-                <img src="./logo.svg" alt="Pomorise Logo" className='size-10' />
-                <div className=" font-semibold text-xl sm:text-2xl">Pomorise</div>
+              <AnimatedLogo height={90} width={90} isProcessing={true} />
+
+                
+                                <div className=" font-semibold text-4xl">Pomorise</div>
               </div>
             </div>
           </section>
