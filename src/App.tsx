@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy, useEffect, useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -13,8 +13,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import InstallPrompt from './components/setting/InstallButton';
 
-
-
+const LandingPage = lazy(() => import('./pages/LandingPage'));
 const Index = lazy(() => import('./pages/Index'));
 const Tasks = lazy(() => import('./pages/Tasks'));
 const About = lazy(() => import('./pages/About'));
@@ -30,54 +29,71 @@ export const PageLoader = () => (
   </div>
 );
 
-const App = () => (
-  <BrowserRouter>
-    <ThemeProvider>
-      <TooltipProvider>
-        <TaskProvider>
-          <TimerProviderWithTasks>
-            <HabitProvider>
-              <JournalProvider>
-                <AIProvider>
-                  <Toaster />
-                  <Sonner richColors position="bottom-left" />
-                  <Routes>
-                    <Route element={<Layout />}>
-                      <Route path="/" element={
-                        <Index />
-                      } />
-                      <Route path="/about" element={
-                        <About />
-                      } />
-                      <Route path="/settings" element={
-                        <Settings />
-                      } />
-                      <Route path="/habits" element={
-                        <Habits />
-                      } />
-                      <Route path="/insights" element={
-                        <Insights />
-                      } />
-                      <Route path="/journal" element={
-                        <Journal />
-                      } />
-                      <Route path="/tasks" element={
-                        <Tasks />
-                      } />
-                      <Route path="*" element={
-                        <NotFound />
-                      } />
-                    </Route>
-                  </Routes>
-                  <InstallPrompt />
-                </AIProvider>
-              </JournalProvider>
-            </HabitProvider>
-          </TimerProviderWithTasks>
-        </TaskProvider>
-      </TooltipProvider>
-    </ThemeProvider>
-  </BrowserRouter>
-);
+const App = () => {
+  const [hasVisitedBefore, setHasVisitedBefore] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const visited = localStorage.getItem('hasVisitedBefore');
+    if (visited === 'true') {
+      setHasVisitedBefore(true);
+    }
+    setIsLoading(false);
+  }, []);
+
+  const markAsVisited = () => {
+    localStorage.setItem('hasVisitedBefore', 'true');
+    setHasVisitedBefore(true);
+  };
+
+  if (isLoading) {
+    return <PageLoader />;
+  }
+
+  if (!hasVisitedBefore) {
+    return (
+      <ThemeProvider>
+        <Suspense fallback={<PageLoader />}>
+          <LandingPage onGetStarted={markAsVisited} />
+        </Suspense>
+      </ThemeProvider>
+    );
+  }
+
+  return (
+    <BrowserRouter>
+      <ThemeProvider>
+        <TooltipProvider>
+          <TaskProvider>
+            <TimerProviderWithTasks>
+              <HabitProvider>
+                <JournalProvider>
+                  <AIProvider>
+                    <Toaster />
+                    <Sonner richColors position="bottom-left" />
+                    <Routes>
+                      <Route element={<Layout />}>
+                        <Route path="/" element={<Index />} />
+                        <Route path="/about" element={<About />} />
+                        <Route path="/settings" element={<Settings />} />
+                        <Route path="/habits" element={<Habits />} />
+                        <Route path="/insights" element={<Insights />} />
+                        <Route path="/journal" element={<Journal />} />
+                        <Route path="/tasks" element={<Tasks />} />
+                      </Route>
+                      <Route path='/landing' element={<LandingPage onGetStarted={markAsVisited} />}/>
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
+                    <InstallPrompt />
+                  </AIProvider>
+                </JournalProvider>
+              </HabitProvider>
+            </TimerProviderWithTasks>
+          </TaskProvider>
+        </TooltipProvider>
+      </ThemeProvider>
+    </BrowserRouter>
+  );
+};
 
 export default App;

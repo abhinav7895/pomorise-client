@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, FormEvent, useCallback } from 'react';
-import {  Clock, Lightbulb, ArrowRightCircle, Loader2 } from 'lucide-react';
+import { Clock, Lightbulb, ArrowRightCircle, Loader2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -7,13 +7,23 @@ import { useAI } from '@/context/AIContext';
 import { cn } from '@/lib/utils';
 import AnimatedLogo from '../ui/animated-logo';
 
-const AIAssistant = () => {
-    const [isOpen, setIsOpen] = useState(false);
+interface AIAssistantProps {
+    initialOpen?: boolean;
+}
+
+const AIAssistant = ({ initialOpen = false }: AIAssistantProps) => {
+    const [isOpen, setIsOpen] = useState(initialOpen);
     const [prompt, setPrompt] = useState('');
     const inputRef = useRef(null);
     const [isProcessing, setIsProcessing] = useState(false);
     const { processText, actionHistory, clearActionHistory } = useAI();
     const formRef = useRef(null);
+
+    useEffect(() => {
+        if (initialOpen) {
+            setIsOpen(true);
+        }
+    }, [initialOpen]);
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -137,11 +147,11 @@ const AIAssistant = () => {
                                         Recent Actions
                                     </h3>
                                     <Button
-                                        type="button" 
+                                        type="button"
                                         variant="ghost"
                                         size="sm"
                                         onClick={(e) => {
-                                            e.preventDefault(); 
+                                            e.preventDefault();
                                             clearActionHistory();
                                         }}
                                         className="h-6 text-xs"

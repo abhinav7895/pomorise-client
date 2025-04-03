@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { Settings, Info, House, Brain, Target, BookOpen, CheckSquare } from 'lucide-react';
 import { PageLoader } from '@/App';
@@ -9,6 +9,14 @@ import { useAI } from '@/context/AIContext';
 const Layout = () => {
   const location = useLocation();
   const {settings} = useAI()
+  const [initialOpen, setInitialOpen] = useState(false);
+
+  useEffect(() => {
+    if (location.state?.openAssitant) {
+      setInitialOpen(true);
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -16,7 +24,8 @@ const Layout = () => {
 
   const NavLinks = () => (
     <nav className="flex items-center md:gap-2 md:space-x-1 max-md:justify-between max-md:w-full">
-     {settings.enabled &&  <AIAssistant />}
+     {settings.enabled && <AIAssistant initialOpen={initialOpen} />
+    }
       <Link
         to="/"
         className={`p-2 border border-dashed flex items-center gap-2 transition-colors ${location.pathname === '/'
