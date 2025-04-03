@@ -44,44 +44,28 @@ const App = () => (
                   <Routes>
                     <Route element={<Layout />}>
                       <Route path="/" element={
-                        <Suspense fallback={<PageLoader />}>
-                          <Index />
-                        </Suspense>
+                        <Index />
                       } />
                       <Route path="/about" element={
-                        <Suspense fallback={<PageLoader />}>
-                          <About />
-                        </Suspense>
+                        <About />
                       } />
                       <Route path="/settings" element={
-                        <Suspense fallback={<PageLoader />}>
-                          <Settings />
-                        </Suspense>
+                        <Settings />
                       } />
                       <Route path="/habits" element={
-                        <Suspense fallback={<PageLoader />}>
-                          <Habits />
-                        </Suspense>
+                        <Habits />
                       } />
                       <Route path="/insights" element={
-                        <Suspense fallback={<PageLoader />}>
-                          <Insights />
-                        </Suspense>
+                        <Insights />
                       } />
                       <Route path="/journal" element={
-                        <Suspense fallback={<PageLoader />}>
-                          <Journal />
-                        </Suspense>
+                        <Journal />
                       } />
                       <Route path="/tasks" element={
-                        <Suspense fallback={<PageLoader />}>
-                          <Tasks />
-                        </Suspense>
+                        <Tasks />
                       } />
                       <Route path="*" element={
-                        <Suspense fallback={<PageLoader />}>
-                          <NotFound />
-                        </Suspense>
+                        <NotFound />
                       } />
                     </Route>
                   </Routes>

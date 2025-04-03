@@ -80,8 +80,7 @@ const AIAssistant = () => {
                 <DialogContent aria-describedby='AI Assitant Dialog' className="sm:max-w-xl">
                     <DialogHeader>
                         <DialogTitle className="flex items-center gap-2">
-                            <AnimatedLogo width={25} height={25} isProcessing={isProcessing} />
-                            AI Assistant
+                            <AnimatedLogo width={60} height={60} isProcessing={isProcessing} />
                         </DialogTitle>
                     </DialogHeader>
 
