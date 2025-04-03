@@ -6,7 +6,7 @@ import { ArrowRight, Check, Terminal, Calendar, MessageSquare } from 'lucide-rea
 import { useNavigate } from 'react-router-dom';
 import HowItWorksModal from '@/components/ui/how-it-works';
 
-const LandingPage = ({ onGetStarted } : {onGetStarted ?: () => void}) => {
+const LandingPage = () => {
     const navigate = useNavigate();
     const [isHowItWorksOpen, setIsHowItWorksOpen] = useState(false);
 
@@ -20,9 +20,9 @@ const LandingPage = ({ onGetStarted } : {onGetStarted ?: () => void}) => {
   ];
 
   const getStarted = () => {
-    onGetStarted();
-    navigate("/")
-  }
+    localStorage.setItem('hasSeenLanding', 'true');
+    navigate("/home");
+  };
 
   return (
     <>
@@ -114,7 +114,7 @@ const LandingPage = ({ onGetStarted } : {onGetStarted ?: () => void}) => {
               </div>
               <Button 
                 className="px-6 py-2 text-md"
-                onClick={() => navigate("/", { state: { openAssitant: true } })}
+                onClick={() => navigate("/home", { state: { openAssitant: true } })}
               >
                 Try AI Assistant
               </Button>

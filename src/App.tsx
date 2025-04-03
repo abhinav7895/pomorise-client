@@ -9,7 +9,7 @@ import { TaskProvider } from "./context/TaskContext";
 import { HabitProvider } from "./context/HabitContext";
 import { JournalProvider } from "./context/JournalContext";
 import { AIProvider } from "./context/AIContext";
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import InstallPrompt from './components/setting/InstallButton';
 
@@ -29,37 +29,18 @@ export const PageLoader = () => (
   </div>
 );
 
+const LandingPageWrapper = () => {
+  const hasSeenLanding = localStorage.getItem('hasSeenLanding');
+
+  if (hasSeenLanding) {
+    return <Navigate to="/home" replace />;
+  }
+
+  return <LandingPage />;
+};
+
+
 const App = () => {
-  const [hasVisitedBefore, setHasVisitedBefore] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const visited = localStorage.getItem('hasVisitedBefore');
-    if (visited === 'true') {
-      setHasVisitedBefore(true);
-    }
-    setIsLoading(false);
-  }, []);
-
-  const markAsVisited = () => {
-    localStorage.setItem('hasVisitedBefore', 'true');
-    setHasVisitedBefore(true);
-  };
-
-  if (isLoading) {
-    return <PageLoader />;
-  }
-
-  if (!hasVisitedBefore) {
-    return (
-      <ThemeProvider>
-        <Suspense fallback={<PageLoader />}>
-          <LandingPage onGetStarted={markAsVisited} />
-        </Suspense>
-      </ThemeProvider>
-    );
-  }
-
   return (
     <BrowserRouter>
       <ThemeProvider>
@@ -71,19 +52,21 @@ const App = () => {
                   <AIProvider>
                     <Toaster />
                     <Sonner richColors position="bottom-left" />
-                    <Routes>
-                      <Route element={<Layout />}>
-                        <Route path="/" element={<Index />} />
-                        <Route path="/about" element={<About />} />
-                        <Route path="/settings" element={<Settings />} />
-                        <Route path="/habits" element={<Habits />} />
-                        <Route path="/insights" element={<Insights />} />
-                        <Route path="/journal" element={<Journal />} />
-                        <Route path="/tasks" element={<Tasks />} />
-                      </Route>
-                      <Route path='/landing' element={<LandingPage onGetStarted={markAsVisited} />}/>
-                      <Route path="*" element={<NotFound />} />
-                    </Routes>
+                    <Suspense fallback={<PageLoader />}>
+                      <Routes>
+                        <Route path='/' element={<LandingPageWrapper />} />
+                        <Route element={<Layout />}>
+                          <Route path="/home" element={<Index />} />
+                          <Route path="/about" element={<About />} />
+                          <Route path="/settings" element={<Settings />} />
+                          <Route path="/habits" element={<Habits />} />
+                          <Route path="/insights" element={<Insights />} />
+                          <Route path="/journal" element={<Journal />} />
+                          <Route path="/tasks" element={<Tasks />} />
+                        </Route>
+                        <Route path="*" element={<NotFound />} />
+                      </Routes>
+                    </Suspense>
                     <InstallPrompt />
                   </AIProvider>
                 </JournalProvider>
