@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import SEO from '@/components/SEO';
 import AnimatedLogo from '@/components/ui/animated-logo';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Check, Terminal, Calendar, ClipboardList, BarChart4, MessageSquare } from 'lucide-react';
+import { ArrowRight, Check, Terminal, Calendar, MessageSquare } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import HowItWorksModal from '@/components/ui/how-it-works';
 
-// This component accepts an onGetStarted prop that will be called when any button is clicked
 const LandingPage = ({ onGetStarted } : {onGetStarted ?: () => void}) => {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const [isHowItWorksOpen, setIsHowItWorksOpen] = useState(false);
 
   const features = [
     "Pomodoro timer with customizable intervals",
@@ -33,7 +34,6 @@ const LandingPage = ({ onGetStarted } : {onGetStarted ?: () => void}) => {
       />
 
       <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-950 text-gray-100">
-        {/* Header */}
         <header className="container mx-auto px-4 py-6 flex justify-between items-center">
           <div className="flex items-center space-x-2">
             <AnimatedLogo height={32} width={32} isProcessing={true} />
@@ -48,7 +48,6 @@ const LandingPage = ({ onGetStarted } : {onGetStarted ?: () => void}) => {
           </Button>
         </header>
 
-        {/* Hero Section */}
         <section className="container mx-auto px-4 py-20 md:py-32 flex flex-col items-center text-center">
           <div className="max-w-3xl mx-auto">
             <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-gray-800 mb-6">
@@ -70,7 +69,7 @@ const LandingPage = ({ onGetStarted } : {onGetStarted ?: () => void}) => {
               <Button 
                 variant="outline" 
                 className="px-8 py-6 text-lg border-gray-700 hover:bg-gray-800"
-                onClick={getStarted}
+                onClick={() => setIsHowItWorksOpen(true)}
               >
                 How It Works
               </Button>
@@ -199,6 +198,11 @@ const LandingPage = ({ onGetStarted } : {onGetStarted ?: () => void}) => {
           </div>
         </footer>
       </div>
+
+      <HowItWorksModal
+        isOpen={isHowItWorksOpen} 
+        onClose={() => setIsHowItWorksOpen(false)} 
+      />
     </>
   );
 };

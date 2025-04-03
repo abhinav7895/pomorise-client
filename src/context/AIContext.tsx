@@ -3,7 +3,6 @@ import { useToast } from "@/components/ui/use-toast";
 import { useTasks } from './TaskContext';
 import { useHabits } from './HabitContext';
 import { useJournals } from './JournalContext';
-import { useTimer } from './TimerContext';
 import axios from 'axios';
 
 export interface AISettings {
