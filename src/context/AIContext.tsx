@@ -32,7 +32,7 @@ interface AIContextType {
 const defaultSettings: AISettings = {
   enabled: true,
   speechRecognitionEnabled: true,
-  autoProcess: true,
+  autoProcess: false,
 };
 
 const AIContext = createContext<AIContextType | undefined>(undefined);
