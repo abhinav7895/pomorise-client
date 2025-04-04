@@ -19,7 +19,7 @@ const AIAssistant = ({ initialOpen = false }: AIAssistantProps) => {
     const [isProcessing, setIsProcessing] = useState(false);
     const { processText, actionHistory, clearActionHistory, settings } = useAI();
     const formRef = useRef<HTMLFormElement>(null);
-    
+
     // Voice recording states
     const [isRecording, setIsRecording] = useState(false);
     const [recordingError, setRecordingError] = useState<string | null>(null);
@@ -82,44 +82,44 @@ const AIAssistant = ({ initialOpen = false }: AIAssistantProps) => {
 
     const startRecording = async () => {
         setRecordingError(null);
-        
+
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            
-            const mediaRecorder = new MediaRecorder(stream, { 
-                mimeType: 'audio/webm' 
+
+            const mediaRecorder = new MediaRecorder(stream, {
+                mimeType: 'audio/webm'
             });
-            
+
             mediaRecorderRef.current = mediaRecorder;
             audioChunksRef.current = [];
-            
+
             mediaRecorder.addEventListener('dataavailable', (event) => {
                 if (event.data.size > 0) {
                     audioChunksRef.current.push(event.data);
                 }
             });
-            
+
             mediaRecorder.addEventListener('error', (error) => {
                 console.error('Media recording error:', error);
                 setRecordingError('Recording error occurred');
                 setIsRecording(false);
                 stopStreamTracks(stream);
             });
-            
+
             mediaRecorder.addEventListener('stop', async () => {
                 if (audioChunksRef.current.length > 0) {
                     await processRecording();
                 }
                 stopStreamTracks(stream);
             });
-            
+
             mediaRecorder.start();
             setIsRecording(true);
         } catch (error) {
             console.error('Error accessing microphone:', error);
-            
+
             let errorMessage = 'Unable to access microphone';
-            
+
             if (error instanceof DOMException) {
                 if (error.name === 'NotAllowedError') {
                     errorMessage = 'Microphone access denied. Please allow microphone permissions.';
@@ -129,7 +129,7 @@ const AIAssistant = ({ initialOpen = false }: AIAssistantProps) => {
                     errorMessage = 'Microphone is busy or unavailable.';
                 }
             }
-            
+
             setRecordingError(errorMessage);
         }
     };
@@ -140,32 +140,32 @@ const AIAssistant = ({ initialOpen = false }: AIAssistantProps) => {
             setIsRecording(false);
         }
     };
-    
+
     const stopStreamTracks = (stream: MediaStream) => {
         stream.getTracks().forEach(track => track.stop());
     };
 
     const processRecording = async () => {
         if (audioChunksRef.current.length === 0) return;
-        
+
         try {
             setIsProcessing(true);
-            
+
             const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
-            
+
             const formData = new FormData();
             formData.append('file', audioBlob, 'recording.webm');
-            
+
             const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/speech`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 }
             });
-            
+
             if (response.data.success && response.data.text) {
 
                 setPrompt(response.data.text);
-                
+
 
                 if (settings.autoProcess) {
                     await processText(response.data.text);
@@ -239,7 +239,7 @@ const AIAssistant = ({ initialOpen = false }: AIAssistantProps) => {
                                     </button>
                                 )}
                             </div>
-                            <Button
+                            {settings.speechRecognitionEnabled && <Button
                                 type="button"
                                 variant="outline"
                                 size="icon"
@@ -256,9 +256,9 @@ const AIAssistant = ({ initialOpen = false }: AIAssistantProps) => {
                                 ) : (
                                     <Mic className="h-4 w-4" />
                                 )}
-                            </Button>
+                            </Button>}
                         </div>
-                        
+
                         {recordingError && (
                             <div className="text-red-500 text-xs mt-1">
                                 {recordingError}
@@ -318,7 +318,7 @@ const AIAssistant = ({ initialOpen = false }: AIAssistantProps) => {
                                                 action.success ? "border-green-500/30" : "border-red-500/30"
                                             )}
                                         >
-                                            <span className="truncate flex-1">{action.text}</span>
+                                            <span className=" line-clamp-1 flex-1 ">{action.text}</span>
                                             <span className="text-xs opacity-70">
                                                 {new Date(action.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                             </span>
