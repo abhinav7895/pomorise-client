@@ -138,6 +138,14 @@ const AIAssistant = ({ initialOpen = false }: AIAssistantProps) => {
         if (mediaRecorderRef.current && isRecording) {
             mediaRecorderRef.current.stop();
             setIsRecording(false);
+
+            audioChunksRef.current = [];
+
+            if (mediaRecorderRef.current.stream) {
+                stopStreamTracks(mediaRecorderRef.current.stream);
+            }
+
+            mediaRecorderRef.current = null;
         }
     };
 
@@ -202,8 +210,12 @@ const AIAssistant = ({ initialOpen = false }: AIAssistantProps) => {
             </button>
 
             <Dialog open={isOpen} onOpenChange={(open) => {
-                if (!open && isRecording) {
-                    stopRecording();
+                if (!open) {
+                    if (isRecording) {
+                        stopRecording();
+                    }
+                    setRecordingError(null);
+                    setIsProcessing(false);
                 }
                 setIsOpen(open);
             }}>
