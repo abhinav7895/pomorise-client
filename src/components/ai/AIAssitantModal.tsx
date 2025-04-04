@@ -245,7 +245,7 @@ const AIAssistant = ({ initialOpen = false }: AIAssistantProps) => {
                                 size="icon"
                                 disabled={isProcessing}
                                 className={cn(
-                                    "h-10 w-10 rounded-full",
+                                    "h-10 w-10 ",
                                     isRecording && "bg-red-100 text-red-500 border-red-300"
                                 )}
                                 onClick={isRecording ? stopRecording : startRecording}
