@@ -82,6 +82,10 @@ const Settings: React.FC = () => {
     updateAISettings({ enabled: !aiSetting.enabled });
   };
 
+  const handleAutoProcessToggle = () => {
+    updateAISettings({ autoProcess: !aiSetting.autoProcess });
+  };
+
   return (
     <>
       <SEO
@@ -144,7 +148,29 @@ const Settings: React.FC = () => {
                 />
               </div>
               
-              {aiSetting.enabled && <Separator />}
+              {aiSetting.enabled && (
+                <>
+                  <Separator />
+                  
+                  {/* New Auto Process toggle */}
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <Label htmlFor="autoProcess">Auto Process</Label>
+                      <div className="text-xs text-muted-foreground">
+                        Automatically process text input without manual submission
+                      </div>
+                    </div>
+                    <Switch
+                      id="autoProcess"
+                      checked={aiSetting.autoProcess}
+                      onCheckedChange={handleAutoProcessToggle}
+                      aria-label="Toggle auto process"
+                    />
+                  </div>
+                  
+                  <Separator />
+                </>
+              )}
 
               <VoiceAISettings />
             </CardContent>
