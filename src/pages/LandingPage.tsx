@@ -5,10 +5,13 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight, Check, Terminal, Calendar, MessageSquare } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import HowItWorksModal from '@/components/ui/how-it-works';
+import GitHubRepoDialog from '@/components/ui/github-dialog';
+
 
 const LandingPage = () => {
     const navigate = useNavigate();
     const [isHowItWorksOpen, setIsHowItWorksOpen] = useState(false);
+    const [isGitHubDialogOpen, setIsGitHubDialogOpen] = useState(false);
 
   const features = [
     "Pomodoro timer with customizable intervals",
@@ -22,6 +25,11 @@ const LandingPage = () => {
   const getStarted = () => {
     localStorage.setItem('hasSeenLanding', 'true');
     navigate("/home");
+  };
+
+  const handleGitHubLinkClick = (e) => {
+    e.preventDefault();
+    setIsGitHubDialogOpen(true);
   };
 
   return (
@@ -169,6 +177,58 @@ const LandingPage = () => {
         </section>
 
         <section className="container mx-auto px-4 py-20 md:py-32">
+          <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+            <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-8">
+              <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-gray-800 mb-6">
+                <span className="text-sm font-medium text-primary">Privacy First</span>
+              </div>
+              <h2 className="text-3xl font-bold mb-6">Your data stays with you</h2>
+              <p className="text-gray-400 mb-6">
+                We believe your productivity data belongs to you alone. That's why Pomorise is designed with your privacy in mind.
+              </p>
+              <ul className="space-y-4">
+                <li className="flex items-start space-x-3">
+                  <Check className="h-5 w-5 text-primary mt-1" />
+                  <p className="text-gray-300">All data stored locally in your browser using localStorage</p>
+                </li>
+                <li className="flex items-start space-x-3">
+                  <Check className="h-5 w-5 text-primary mt-1" />
+                  <p className="text-gray-300">No backend data storage for your tasks, habits or journals</p>
+                </li>
+                <li className="flex items-start space-x-3">
+                  <Check className="h-5 w-5 text-primary mt-1" />
+                  <p className="text-gray-300">AI commands processed securely, data never stored after processing</p>
+                </li>
+                <li className="flex items-start space-x-3">
+                  <Check className="h-5 w-5 text-primary mt-1" />
+                  <p className="text-gray-300">Open source codebase for full transparency</p>
+                </li>
+              </ul>
+            </div>
+            <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-8">
+              <h3 className="text-xl font-medium mb-4">How your data is handled:</h3>
+              <div className="space-y-4 mb-6">
+                <div className="p-4 bg-gray-800 rounded-lg">
+                  <h4 className="font-medium mb-2">Local Storage</h4>
+                  <p className="text-sm text-gray-400">Tasks, habits, journal entries, and timer settings are stored directly in your browser's localStorage. No data is sent to our servers.</p>
+                </div>
+                <div className="p-4 bg-gray-800 rounded-lg">
+                  <h4 className="font-medium mb-2">AI Assistant</h4>
+                  <p className="text-sm text-gray-400">AI commands are processed in real-time through encrypted connections. Queries are never logged or stored after processing.</p>
+                </div>
+                <div className="p-4 bg-gray-800 rounded-lg">
+                  <h4 className="font-medium mb-2">Open Source</h4>
+                  <p className="text-sm text-gray-400">Our entire codebase is open source and available for inspection, so you can verify exactly how your data is handled.</p>
+                </div>
+              </div>
+              <a href="#" className="text-primary hover:underline text-sm inline-flex items-center" onClick={handleGitHubLinkClick}>
+                View GitHub Repository <ArrowRight className="ml-1 h-4 w-4" />
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <section className="container mx-auto px-4 py-20 md:py-32">
           <div className="max-w-4xl mx-auto text-center bg-gray-900/50 border border-gray-800 rounded-2xl p-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to transform your productivity?</h2>
             <p className="text-xl text-gray-400 mb-8">
@@ -184,10 +244,10 @@ const LandingPage = () => {
         </section>
 
         <footer className="container flex flex-col items-center w-full mx-auto px-4 py-12 border-t border-gray-800">
-          <div className=" flex  justify-center items-center flex-col  gap-5 space-x-2 my-10">
-              <AnimatedLogo height={100} width={100} isProcessing={true} />
-              <span className="text-6xl font-medium">Pomorise</span>
-            </div>
+          <div className="flex justify-center items-center flex-col gap-5 space-x-2 my-10">
+            <AnimatedLogo height={100} width={100} isProcessing={true} />
+            <span className="text-6xl font-medium">Pomorise</span>
+          </div>
           <div className="flex flex-col w-full md:flex-row justify-between items-center">
             <div className="text-gray-400 text-sm mb-4 md:mb-0">
               Created by <a href="https://abhinavyadav.in" className="text-primary hover:underline" target="_blank" rel="noopener noreferrer">Abhinav</a>
@@ -202,6 +262,11 @@ const LandingPage = () => {
       <HowItWorksModal
         isOpen={isHowItWorksOpen} 
         onClose={() => setIsHowItWorksOpen(false)} 
+      />
+      
+      <GitHubRepoDialog
+        isOpen={isGitHubDialogOpen}
+        onClose={() => setIsGitHubDialogOpen(false)}
       />
     </>
   );
