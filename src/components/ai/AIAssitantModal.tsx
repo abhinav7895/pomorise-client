@@ -1,11 +1,12 @@
-import { useState, useRef, useEffect, FormEvent, useCallback } from 'react';
-import { Clock, Lightbulb, ArrowRightCircle, Loader2 } from 'lucide-react';
+import { useState, useRef, useEffect, FormEvent } from 'react';
+import { Clock, Lightbulb, ArrowRightCircle, Loader2, Mic, MicOff } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useAI } from '@/context/AIContext';
 import { cn } from '@/lib/utils';
 import AnimatedLogo from '../ui/animated-logo';
+import axios from 'axios';
 
 interface AIAssistantProps {
     initialOpen?: boolean;
@@ -14,10 +15,16 @@ interface AIAssistantProps {
 const AIAssistant = ({ initialOpen = false }: AIAssistantProps) => {
     const [isOpen, setIsOpen] = useState(initialOpen);
     const [prompt, setPrompt] = useState('');
-    const inputRef = useRef(null);
+    const inputRef = useRef<HTMLInputElement>(null);
     const [isProcessing, setIsProcessing] = useState(false);
-    const { processText, actionHistory, clearActionHistory } = useAI();
-    const formRef = useRef(null);
+    const { processText, actionHistory, clearActionHistory, settings } = useAI();
+    const formRef = useRef<HTMLFormElement>(null);
+    
+    // Voice recording states
+    const [isRecording, setIsRecording] = useState(false);
+    const [recordingError, setRecordingError] = useState<string | null>(null);
+    const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+    const audioChunksRef = useRef<Blob[]>([]);
 
     useEffect(() => {
         if (initialOpen) {
@@ -43,11 +50,16 @@ const AIAssistant = ({ initialOpen = false }: AIAssistantProps) => {
     useEffect(() => {
         if (isOpen && inputRef.current) {
             setTimeout(() => {
-                inputRef.current.focus();
+                inputRef.current?.focus();
             }, 100);
         }
     }, [isOpen]);
 
+    useEffect(() => {
+        if (!isOpen && isRecording) {
+            stopRecording();
+        }
+    }, [isOpen]);
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -68,6 +80,109 @@ const AIAssistant = ({ initialOpen = false }: AIAssistantProps) => {
         setPrompt(exampleText);
     };
 
+    const startRecording = async () => {
+        setRecordingError(null);
+        
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            
+            const mediaRecorder = new MediaRecorder(stream, { 
+                mimeType: 'audio/webm' 
+            });
+            
+            mediaRecorderRef.current = mediaRecorder;
+            audioChunksRef.current = [];
+            
+            mediaRecorder.addEventListener('dataavailable', (event) => {
+                if (event.data.size > 0) {
+                    audioChunksRef.current.push(event.data);
+                }
+            });
+            
+            mediaRecorder.addEventListener('error', (error) => {
+                console.error('Media recording error:', error);
+                setRecordingError('Recording error occurred');
+                setIsRecording(false);
+                stopStreamTracks(stream);
+            });
+            
+            mediaRecorder.addEventListener('stop', async () => {
+                if (audioChunksRef.current.length > 0) {
+                    await processRecording();
+                }
+                stopStreamTracks(stream);
+            });
+            
+            mediaRecorder.start();
+            setIsRecording(true);
+        } catch (error) {
+            console.error('Error accessing microphone:', error);
+            
+            let errorMessage = 'Unable to access microphone';
+            
+            if (error instanceof DOMException) {
+                if (error.name === 'NotAllowedError') {
+                    errorMessage = 'Microphone access denied. Please allow microphone permissions.';
+                } else if (error.name === 'NotFoundError') {
+                    errorMessage = 'No microphone found. Please connect a microphone and try again.';
+                } else if (error.name === 'NotReadableError') {
+                    errorMessage = 'Microphone is busy or unavailable.';
+                }
+            }
+            
+            setRecordingError(errorMessage);
+        }
+    };
+
+    const stopRecording = () => {
+        if (mediaRecorderRef.current && isRecording) {
+            mediaRecorderRef.current.stop();
+            setIsRecording(false);
+        }
+    };
+    
+    const stopStreamTracks = (stream: MediaStream) => {
+        stream.getTracks().forEach(track => track.stop());
+    };
+
+    const processRecording = async () => {
+        if (audioChunksRef.current.length === 0) return;
+        
+        try {
+            setIsProcessing(true);
+            
+            const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+            
+            const formData = new FormData();
+            formData.append('file', audioBlob, 'recording.webm');
+            
+            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/speech`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }
+            });
+            
+            if (response.data.success && response.data.text) {
+
+                setPrompt(response.data.text);
+                
+
+                if (settings.autoProcess) {
+                    await processText(response.data.text);
+                    setPrompt('');
+                }
+            } else {
+                setRecordingError('Failed to process speech. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error processing recording:', error);
+            setRecordingError('Error processing speech. Please try again.');
+        } finally {
+            setIsProcessing(false);
+            audioChunksRef.current = [];
+        }
+    };
+
     const examples = [
         { text: "Add task to buy groceries", icon: <ArrowRightCircle className="h-4 w-4" /> },
         { text: "Start my meditation habit", icon: <ArrowRightCircle className="h-4 w-4" /> },
@@ -86,8 +201,13 @@ const AIAssistant = ({ initialOpen = false }: AIAssistantProps) => {
                 <AnimatedLogo height={30} width={30} isProcessing={true} />
             </button>
 
-            <Dialog open={isOpen} onOpenChange={setIsOpen}>
-                <DialogContent aria-describedby='AI Assitant Dialog' className="sm:max-w-xl">
+            <Dialog open={isOpen} onOpenChange={(open) => {
+                if (!open && isRecording) {
+                    stopRecording();
+                }
+                setIsOpen(open);
+            }}>
+                <DialogContent aria-describedby="AI Assistant Dialog" className="sm:max-w-xl">
                     <DialogHeader>
                         <DialogTitle className="flex items-center gap-2">
                             <AnimatedLogo width={60} height={60} isProcessing={isProcessing} />
@@ -95,26 +215,54 @@ const AIAssistant = ({ initialOpen = false }: AIAssistantProps) => {
                     </DialogHeader>
 
                     <form onSubmit={handleSubmit} ref={formRef} className="relative">
-                        <Input
-                            ref={inputRef}
-                            value={prompt}
-                            onChange={(e) => setPrompt(e.target.value)}
-                            placeholder="Tell me what to do..."
-                            className="pr-10 border-neutral-500"
-                            disabled={isProcessing}
-                        />
-                        {isProcessing ? (
-                            <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                                <Loader2 className="h-4 w-4 animate-spin" />
+                        <div className="flex items-center gap-2">
+                            <div className="relative flex-1">
+                                <Input
+                                    ref={inputRef}
+                                    value={prompt}
+                                    onChange={(e) => setPrompt(e.target.value)}
+                                    placeholder="Tell me what to do..."
+                                    className="pr-10 border-neutral-500"
+                                    disabled={isProcessing || isRecording}
+                                />
+                                {isProcessing ? (
+                                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                                        <Loader2 className="h-4 w-4 animate-spin" />
+                                    </div>
+                                ) : (
+                                    <button
+                                        type="submit"
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                                        disabled={isProcessing || !prompt.trim() || isRecording}
+                                    >
+                                        <ArrowRightCircle className="h-4 w-4" />
+                                    </button>
+                                )}
                             </div>
-                        ) : (
-                            <button
-                                type="submit"
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                                disabled={isProcessing || !prompt.trim()}
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="icon"
+                                disabled={isProcessing}
+                                className={cn(
+                                    "h-10 w-10 rounded-full",
+                                    isRecording && "bg-red-100 text-red-500 border-red-300"
+                                )}
+                                onClick={isRecording ? stopRecording : startRecording}
+                                title={isRecording ? "Stop recording" : "Start voice recording"}
                             >
-                                <ArrowRightCircle className="h-4 w-4" />
-                            </button>
+                                {isRecording ? (
+                                    <MicOff className="h-4 w-4 animate-pulse" />
+                                ) : (
+                                    <Mic className="h-4 w-4" />
+                                )}
+                            </Button>
+                        </div>
+                        
+                        {recordingError && (
+                            <div className="text-red-500 text-xs mt-1">
+                                {recordingError}
+                            </div>
                         )}
                     </form>
 
@@ -131,6 +279,7 @@ const AIAssistant = ({ initialOpen = false }: AIAssistantProps) => {
                                         type="button"
                                         className="flex items-center gap-2 text-sm p-2 border border-dashed rounded hover:bg-secondary/50 transition-colors text-left"
                                         onClick={() => handleExampleClick(example.text)}
+                                        disabled={isRecording}
                                     >
                                         {example.icon}
                                         <span>{example.text}</span>
@@ -155,6 +304,7 @@ const AIAssistant = ({ initialOpen = false }: AIAssistantProps) => {
                                             clearActionHistory();
                                         }}
                                         className="h-6 text-xs"
+                                        disabled={isRecording}
                                     >
                                         Clear
                                     </Button>

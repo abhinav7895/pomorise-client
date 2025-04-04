@@ -111,17 +111,7 @@ export const AIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
         currentTime: new Date().toISOString()
       };
 
-      const { data } = await axios.post<{
-        success: boolean;
-        data: {
-          type: 'tasks' | 'habits' | 'journal' | 'pomodoros';
-          action: string;
-          text: string;
-          id?: string;
-          title?: string;
-          name?: string;
-        };
-      }>(`${import.meta.env.VITE_BACKEND_URL}/api/action`, { text, context });
+      const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/action`, { text, context });
 
       if (!data.success || !data.data) {
         throw new Error('Failed to determine action');
