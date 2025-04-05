@@ -1,6 +1,5 @@
-
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 
 export interface Task {
   id: string;
@@ -30,7 +29,6 @@ interface TaskContextType {
 const TaskContext = createContext<TaskContextType | undefined>(undefined);
 
 export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { toast } = useToast();
   const [tasks, setTasks] = useState<Task[]>(() => {
     const savedTasks = localStorage.getItem('tasks');
     return savedTasks ? JSON.parse(savedTasks) : [];
@@ -65,9 +63,8 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     setTasks([...tasks, newTask]);
     
-    toast({
-      title: "Task added",
-      description: `"${title}" has been added to your tasks.`,
+    toast.success("Task added", {
+      description: `"${title}" has been added to your tasks.`
     });
     
     if (!activeTaskId) {
@@ -99,9 +96,8 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
     
     if (taskToDelete) {
-      toast({
-        title: "Task deleted",
-        description: `"${taskToDelete.title}" has been removed.`,
+      toast.error("Task deleted", {
+        description: `"${taskToDelete.title}" has been removed.`
       });
     }
   };
@@ -145,12 +141,10 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     setTasks(tasks.filter((task) => !task.isCompleted));
     
-    toast({
-      title: "Completed tasks cleared",
-      description: `${completedCount} completed task${completedCount !== 1 ? 's' : ''} removed.`,
+    toast.info("Completed tasks cleared", {
+      description: `${completedCount} completed task${completedCount !== 1 ? 's' : ''} removed.`
     });
   };
-
 
   const setActiveTask = (taskId: string | null) => {
     setActiveTaskId(taskId);

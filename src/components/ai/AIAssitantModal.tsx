@@ -7,6 +7,7 @@ import { useAI } from '@/context/AIContext';
 import { cn } from '@/lib/utils';
 import AnimatedLogo from '../ui/animated-logo';
 import axios from 'axios';
+import { toast } from 'sonner';
 
 interface AIAssistantProps {
     initialOpen?: boolean;
@@ -19,6 +20,7 @@ const AIAssistant = ({ initialOpen = false }: AIAssistantProps) => {
     const [isProcessing, setIsProcessing] = useState(false);
     const { processText, actionHistory, clearActionHistory, settings } = useAI();
     const formRef = useRef<HTMLFormElement>(null);
+
 
     // Voice recording states
     const [isRecording, setIsRecording] = useState(false);
@@ -39,13 +41,15 @@ const AIAssistant = ({ initialOpen = false }: AIAssistantProps) => {
                 setIsOpen(prev => !prev);
             }
             if (e.key === 'Escape' && isOpen) {
-                setIsOpen(false);
+                if (!isProcessing && !isRecording) {
+                    setIsOpen(false);
+                }
             }
         };
 
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [isOpen]);
+    }, [isOpen, isProcessing, isRecording]);
 
     useEffect(() => {
         if (isOpen && inputRef.current) {
@@ -69,6 +73,7 @@ const AIAssistant = ({ initialOpen = false }: AIAssistantProps) => {
             setIsProcessing(true);
             await processText(prompt);
             setPrompt('');
+            setIsOpen(true);
         } catch (error) {
             console.error('Error processing prompt:', error);
         } finally {
@@ -208,14 +213,16 @@ const AIAssistant = ({ initialOpen = false }: AIAssistantProps) => {
             >
                 <AnimatedLogo height={30} width={30} isProcessing={true} />
             </button>
-
             <Dialog open={isOpen} onOpenChange={(open) => {
+                if (!open && (isProcessing || isRecording)) {
+                    return;
+                }
+
                 if (!open) {
                     if (isRecording) {
                         stopRecording();
                     }
                     setRecordingError(null);
-                    setIsProcessing(false);
                 }
                 setIsOpen(open);
             }}>

@@ -1,9 +1,9 @@
 import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
-import { useToast } from "@/components/ui/use-toast";
 import { useTasks } from './TaskContext';
 import { useHabits } from './HabitContext';
 import { useJournals } from './JournalContext';
 import axios from 'axios';
+import { toast } from 'sonner';
 
 export interface AISettings {
   enabled: boolean;
@@ -49,7 +49,6 @@ export const AIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
   });
 
   const [actionHistory, setActionHistory] = useState<ActionHistory[]>([]);
-  const { toast } = useToast();
   
   const { 
     tasks, 
@@ -131,10 +130,7 @@ export const AIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
           success = await handleJournalAction(action);
           break;
         default:
-          toast({
-            title: 'Action processed',
-            description: `I understood: "${text}"`,
-          });
+          toast.success("Action processed");
           success = true;
       }
 
@@ -146,11 +142,7 @@ export const AIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
       }, success);
 
       if (!success) {
-        toast({
-          title: 'Action not completed',
-          description: 'Could not complete the requested action',
-          variant: 'destructive',
-        });
+        toast.error("Action not completed");
       }
 
     } catch (error) {
@@ -162,15 +154,10 @@ export const AIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
         success: false
       }, false);
       
-      toast({
-        title: 'Error processing request',
-        description: 'Could not determine action from your input',
-        variant: 'destructive',
-      });
+      toast.error('Could not determine action from your input');
     }
   }, [tasks, habits, journals]);
 
-  
   const handleTaskAction = useCallback(async (action: {
     action: string;
     id?: string;
@@ -187,10 +174,6 @@ export const AIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
             action.estimatedPomodoros || 1,
             action.notes
           );
-          toast({
-            title: 'Task added',
-            description: `"${action.title}" has been added to your tasks.`,
-          });
           return true;
 
         case 'update':
@@ -201,36 +184,20 @@ export const AIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
             estimatedPomodoros: action.estimatedPomodoros,
             notes: action.notes
           });
-          toast({
-            title: 'Task updated',
-            description: `Task has been updated.`,
-          });
           return true;
 
         case 'complete':
           if (!action.id) throw new Error('ID is required for completion');
           await completeTask(action.id);
-          toast({
-            title: 'Task completed',
-            description: `Task marked as completed.`,
-          });
           return true;
 
         case 'delete':
           if (!action.id) throw new Error('ID is required for deletion');
           await deleteTask(action.id);
-          toast({
-            title: 'Task deleted',
-            description: `Task has been removed.`,
-          });
           return true;
 
         case 'clear':
           await clearCompletedTasks();
-          toast({
-            title: 'Completed tasks cleared',
-            description: 'All completed tasks have been removed.',
-          });
           return true;
 
         default:
@@ -263,10 +230,6 @@ export const AIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
             reminderTime: '',
             stackedWith: ''
           });
-          toast({
-            title: 'Habit added',
-            description: `"${action.name}" habit has been created.`,
-          });
           return true;
 
         case 'update':
@@ -277,37 +240,21 @@ export const AIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
             isPositive: action.isPositive,
             targetDays: action.targetDays
           });
-          toast({
-            title: 'Habit updated',
-            description: `Habit has been updated.`,
-          });
           return true;
 
         case 'complete':
           if (!action.id) throw new Error('ID is required for completion');
           await completeHabitForToday(action.id);
-          toast({
-            title: 'Habit completed',
-            description: `Habit marked as completed for today.`,
-          });
           return true;
 
         case 'delete':
           if (!action.id) throw new Error('ID is required for deletion');
           await removeHabit(action.id);
-          toast({
-            title: 'Habit removed',
-            description: `Habit has been removed.`,
-          });
           return true;
 
         case 'reset':
           if (!action.id) throw new Error('ID is required for reset');
           await resetHabitStreak(action.id);
-          toast({
-            title: 'Habit streak reset',
-            description: `Habit streak has been reset.`,
-          });
           return true;
 
         default:
@@ -332,10 +279,6 @@ export const AIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
             action.title || 'New journal entry',
             action.content || ''
           );
-          toast({
-            title: 'Journal entry added',
-            description: 'Your thoughts have been saved.',
-          });
           return true;
 
         case 'update':
@@ -344,28 +287,16 @@ export const AIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
             title: action.title,
             content: action.content
           });
-          toast({
-            title: 'Journal updated',
-            description: 'Journal entry has been updated.',
-          });
           return true;
 
         case 'delete':
           if (!action.id) throw new Error('ID is required for deletion');
           await deleteJournal(action.id);
-          toast({
-            title: 'Journal deleted',
-            description: 'Journal entry has been removed.',
-          });
           return true;
 
         case 'archive':
           if (!action.id) throw new Error('ID is required for archiving');
           await archiveJournal(action.id);
-          toast({
-            title: 'Journal archived',
-            description: 'Journal entry has been archived.',
-          });
           return true;
 
         default:
@@ -377,10 +308,9 @@ export const AIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
     }
   }, [addJournal, updateJournal, deleteJournal, archiveJournal]);
 
-
-  // pending
   const startListening = useCallback(() => {
-  }, [toast]);
+    // No-op for now
+  }, []);
 
   const stopListening = useCallback(() => {
     // No-op for now

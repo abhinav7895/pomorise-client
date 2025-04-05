@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { recordCompletedPomodoro } from '@/utils/streakTracker';
 import { getFocusMusicPlayer } from '@/utils/focusMusic';
 import { sendNotification } from '@/utils/notifications';
@@ -92,7 +92,6 @@ const TimerProviderInternal: React.FC<{
   children: React.ReactNode;
   taskContext: ReturnType<typeof useTasks>;
 }> = ({ children, taskContext }) => {
-  const { toast } = useToast();
   const { activeTaskId, incrementCompletedPomodoros, updateTask, getActiveTask } = taskContext;
 
   const [settings, setSettings] = useState<TimerSettings>(() => {
@@ -268,8 +267,7 @@ const TimerProviderInternal: React.FC<{
             completedPomodoros: activeTask.completedPomodoros + 1
           });
           
-          toast({
-            title: "Task completed!",
+          toast("Task completed!", {
             description: `"${activeTask.title}" has been marked as completed.`,
           });
         }
@@ -316,11 +314,9 @@ const TimerProviderInternal: React.FC<{
       ? 'Time for a break!'
       : 'Ready to focus again?';
     
-    toast({
-      title,
+    toast(title, {
       description: message,
     });
-    
     
     sendNotification(title, { body: message });
   };

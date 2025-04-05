@@ -1,6 +1,5 @@
-// src/context/JournalContext.tsx
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 export interface JournalEntry {
   id: string;
@@ -22,7 +21,6 @@ interface JournalContextType {
 const JournalContext = createContext<JournalContextType | undefined>(undefined);
 
 export const JournalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { toast } = useToast();
   const [journals, setJournals] = useState<JournalEntry[]>(() => {
     const savedJournals = localStorage.getItem('journals');
     return savedJournals ? JSON.parse(savedJournals) : [];
@@ -48,9 +46,8 @@ export const JournalProvider: React.FC<{ children: React.ReactNode }> = ({ child
     
     setJournals(prev => [newJournal, ...prev]);
     
-    toast({
-      title: "Journal Entry Added",
-      description: `"${title}" has been saved successfully.`,
+    toast.success("Journal Entry Added", {
+      description: `"${title}" has been saved successfully.`
     });
   };
 
@@ -69,9 +66,8 @@ export const JournalProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setJournals(prev => prev.filter(journal => journal.id !== id));
     
     if (journalToDelete) {
-      toast({
-        title: "Journal Entry Deleted",
-        description: `"${journalToDelete.title}" has been removed.`,
+      toast.error("Journal Entry Deleted", {
+        description: `"${journalToDelete.title}" has been removed.`
       });
     }
   };
@@ -87,9 +83,8 @@ export const JournalProvider: React.FC<{ children: React.ReactNode }> = ({ child
     );
     
     if (journalToArchive) {
-      toast({
-        title: journalToArchive.isArchived ? "Journal Unarchived" : "Journal Archived",
-        description: `"${journalToArchive.title}" has been ${journalToArchive.isArchived ? "unarchived" : "archived"}.`,
+      toast.info(journalToArchive.isArchived ? "Journal Unarchived" : "Journal Archived", {
+        description: `"${journalToArchive.title}" has been ${journalToArchive.isArchived ? "unarchived" : "archived"}.`
       });
     }
   };

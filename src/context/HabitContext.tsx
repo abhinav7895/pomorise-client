@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { useToast } from "@/hooks/use-toast";
+import { toast } from 'sonner';
 import { formatDistanceToNow } from 'date-fns';
 
 export interface Habit {
@@ -45,8 +45,6 @@ export const HabitProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   });
 
-  const { toast } = useToast();
-
   useEffect(() => {
     try {
       localStorage.setItem('habits', JSON.stringify(habits));
@@ -65,8 +63,7 @@ export const HabitProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           const today = new Date().toISOString().split('T')[0];
           
           if (!habit.completedDates.includes(today)) {
-            toast({
-              title: `Habit Reminder: ${habit.name}`,
+            toast(`Habit Reminder: ${habit.name}`, {
               description: `Don't forget to ${habit.isPositive ? 'complete' : 'avoid'} this habit today!`,
               duration: 5000,
             });
@@ -77,7 +74,7 @@ export const HabitProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     
     const intervalId = setInterval(checkReminders, 60000);
     return () => clearInterval(intervalId);
-  }, [habits, toast]);
+  }, [habits]);
 
   const addHabit = (habit: Omit<Habit, 'id' | 'currentStreak' | 'longestStreak' | 'completedDates' | 'lastCompletedDate' | 'created'>) => {
     const newHabit: Habit = {
@@ -92,8 +89,7 @@ export const HabitProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     
     setHabits(prevHabits => [...prevHabits, newHabit]);
     
-    toast({
-      title: 'Habit Created',
+    toast('Habit Created', {
       description: `Your habit "${habit.name}" has been created. Start tracking today!`,
     });
   };
@@ -112,8 +108,7 @@ export const HabitProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     
     setHabits(prevHabits => prevHabits.filter(habit => habit.id !== id));
     
-    toast({
-      title: 'Habit Removed',
+    toast('Habit Removed', {
       description: `"${habitToRemove.name}" has been removed from your habits.`,
     });
   };
@@ -147,8 +142,7 @@ export const HabitProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         const longestStreak = Math.max(currentStreak, habit.longestStreak);
         
         if (currentStreak === habit.targetDays) {
-          toast({
-            title: '🎉 Congratulations!',
+          toast('🎉 Congratulations!', {
             description: `You've reached your target of ${habit.targetDays} days for "${habit.name}"!`,
             duration: 6000,
           });
@@ -156,8 +150,7 @@ export const HabitProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         
         const milestones = [7, 14, 21, 30, 60, 90, 180, 365];
         if (milestones.includes(currentStreak) && currentStreak !== habit.currentStreak) {
-          toast({
-            title: '🏆 Milestone Achieved!',
+          toast('🏆 Milestone Achieved!', {
             description: `You've maintained "${habit.name}" for ${currentStreak} days. Keep going!`,
             duration: 6000,
           });
@@ -187,8 +180,7 @@ export const HabitProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       });
     });
     
-    toast({
-      title: 'Streak Reset',
+    toast('Streak Reset', {
       description: `The streak for this habit has been reset. Start again today!`,
     });
   };

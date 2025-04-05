@@ -50,8 +50,7 @@ const App = () => {
               <HabitProvider>
                 <JournalProvider>
                   <AIProvider>
-                    <Toaster />
-                    <Sonner richColors position="bottom-left" />
+                    <Sonner richColors position="top-right" />
                     <Suspense fallback={<PageLoader />}>
                       <Routes>
                         <Route path='/' element={<LandingPageWrapper />} />
