@@ -7,7 +7,6 @@ import { useAI } from '@/context/AIContext';
 import { cn } from '@/lib/utils';
 import AnimatedLogo from '../ui/animated-logo';
 import axios from 'axios';
-import { toast } from 'sonner';
 
 interface AIAssistantProps {
     initialOpen?: boolean;

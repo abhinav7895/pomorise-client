@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { useTasks } from '@/context/TaskContext';
 import { useHabits } from '@/context/HabitContext';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Brain, Lightbulb, Star, Check, AlertTriangle, Loader2 } from 'lucide-react';
 import SEO from '@/components/SEO';
@@ -12,7 +12,6 @@ import SEO from '@/components/SEO';
 const Insights: React.FC = () => {
   const { tasks } = useTasks();
   const { habits } = useHabits();
-  const { toast } = useToast();
 
   const [loading, setLoading] = useState(false);
   const [insights, setInsights] = useState<{
@@ -72,9 +71,8 @@ const Insights: React.FC = () => {
 
   const fetchInsights = async () => {
     if (!canRefresh()) {
-      toast({
-        title: 'Refresh Cooldown',
-        description: `Please wait ${formatTimeRemaining(timeUntilNextRefresh || 0)} before refreshing again.`,
+      toast.info(`Please wait ${formatTimeRemaining(timeUntilNextRefresh || 0)} before refreshing again.`, {
+        description: 'Refresh Cooldown',
       });
       return;
     }
@@ -94,16 +92,13 @@ const Insights: React.FC = () => {
       setLastFetched(now);
       localStorage.setItem('insights_last_fetched', now);
 
-      toast({
-        title: 'Insights Generated',
-        description: 'Your personalized insights are ready!',
+      toast.success('Your personalized insights are ready!', {
+        description: 'Insights Generated',
       });
     } catch (error) {
       console.error('Error fetching insights:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to fetch insights. Please try again.',
-        variant: 'destructive',
+      toast.error('Failed to fetch insights. Please try again.', {
+        description: 'Error',
       });
     } finally {
       setLoading(false);

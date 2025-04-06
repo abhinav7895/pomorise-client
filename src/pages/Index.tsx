@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Timer from '@/components/timer/Timer';
 import TaskList from '@/components/tasks/TaskList';
 import JournalList from '@/components/journal/JournalList';
@@ -12,17 +12,9 @@ import { Link } from 'react-router-dom';
 import SEO from '@/components/SEO';
 import { useTimer } from '@/context/TimerContext';
 import { cn } from '@/lib/utils';
-import { Input } from '@/components/ui/input';
-import { useAI } from '@/context/AIContext';
-import { Loader2 } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
 
 const Index = () => {
   const { timerMode } = useTimer();
-  const { processText } = useAI();
-  const [prompt, setPrompt] = useState('');
-  const { toast } = useToast();
-
   useEffect(() => {
     requestNotificationPermission();
     registerServiceWorker();
@@ -41,21 +33,6 @@ const Index = () => {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!prompt.trim()) return;
-    
-    try {
-      await processText(prompt);
-      setPrompt('');
-    } catch (error) {
-      toast({
-        title: 'Error processing prompt',
-        description: 'Failed to determine action from your input',
-        variant: 'destructive',
-      });
-    }
-  };
 
   return (
     <>
