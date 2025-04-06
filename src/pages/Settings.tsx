@@ -13,7 +13,7 @@ import { useUserStore } from '@/store/userStore';
 import AuthDialog from '@/components/setting/AuthDialog';
 import { VoiceAISettings } from '@/components/text-voice-assistant/assistant';
 import { useAI } from '@/context/AIContext';
-import { FlaskConical } from 'lucide-react';
+import { ShareProgressCard } from '@/components/setting/ShareProgressCard';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let deferredPrompt: any;
@@ -38,12 +38,12 @@ const Settings: React.FC = () => {
     hidden: { opacity: 0 },
     show: { opacity: 1, transition: { staggerChildren: 0.1 } },
   };
-  
+
   const item = {
     hidden: { opacity: 0, y: 20 },
     show: { opacity: 1, y: 0 },
   };
-  
+
   useEffect(() => {
     const handleBeforeInstallPrompt = (event: Event) => {
       event.preventDefault();
@@ -70,7 +70,7 @@ const Settings: React.FC = () => {
     if (deferredPrompt) {
       deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
-      
+
       if (outcome === 'accepted') {
         setShowInstallButton(false);
       }
@@ -129,7 +129,7 @@ const Settings: React.FC = () => {
         <motion.div variants={item}>
           <Card>
             <CardHeader>
-              <CardTitle className='flex items-center justify-between gap-1'>AI Assistant <span className='border-dashed border px-2 bg-neutral-900/40 text-neutral-700 border-neutral-700 text-xs'>Beta</span></CardTitle>
+              <CardTitle className='flex items-center justify-between gap-1'>AI Assistant </CardTitle>
               <CardDescription>Enable voice commands and AI processing</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -147,11 +147,11 @@ const Settings: React.FC = () => {
                   aria-label="Toggle ai assistant"
                 />
               </div>
-              
+
               {aiSetting.enabled && (
                 <>
                   <Separator />
-                  
+
                   {/* New Auto Process toggle */}
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
@@ -167,7 +167,7 @@ const Settings: React.FC = () => {
                       aria-label="Toggle auto process"
                     />
                   </div>
-                  
+
                   <Separator />
                 </>
               )}
@@ -243,6 +243,17 @@ const Settings: React.FC = () => {
                   </SelectContent>
                 </Select>
               </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+        <motion.div variants={item}>
+          <Card>
+            <CardHeader>
+              <CardTitle>Share Your Progress</CardTitle>
+              <CardDescription>Create and share your productivity achievements</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ShareProgressCard />
             </CardContent>
           </Card>
         </motion.div>

@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { useTasks } from '@/context/TaskContext';
+import { Task, useTasks } from '@/context/TaskContext';
 import { Plus, CheckSquare, Flame } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,15 +8,31 @@ import TaskItem from './TaskItem';
 import AddTask from './AddTask';
 import { AnimatePresence, motion } from 'framer-motion';
 
-
 const TaskList = () => {
-  const { tasks, getActiveTask } = useTasks();
+  const { tasks, getActiveTask, updateTask } = useTasks();
   const [showAddTask, setShowAddTask] = useState(false);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
   const activeTask = getActiveTask();
   
   const incompleteTasks = tasks.filter(task => !task.isCompleted);
   
+  const handleTaskAdded = () => {
+    setShowAddTask(false);
+    setEditingTask(null);
+  };
   
+  const handleEditTask = (task: Task) => {
+    setEditingTask(task);
+  };
+  
+  const handleCancelEdit = () => {
+    setEditingTask(null);
+  };
+  
+  const handleTaskUpdated = () => {
+    setEditingTask(null);
+  };
+
   return (
     <Card className="shadow-md border-t-4 border-t-primary">
       <CardHeader className="flex items-center justify-between">
@@ -35,7 +50,13 @@ const TaskList = () => {
         {showAddTask ? (
           <AddTask 
             onCancel={() => setShowAddTask(false)} 
-            onTaskAdded={() => setShowAddTask(false)} 
+            onTaskAdded={handleTaskAdded}
+          />
+        ) : editingTask ? (
+          <AddTask 
+            taskToEdit={editingTask}
+            onCancel={handleCancelEdit}
+            onTaskAdded={handleTaskUpdated}
           />
         ) : (
           <AnimatePresence>
@@ -56,7 +77,11 @@ const TaskList = () => {
                         exit={{ opacity: 0, height: 0 }}
                         className="overflow-hidden"
                       >
-                        <TaskItem task={task} isActive={activeTask?.id === task.id} />
+                        <TaskItem 
+                          task={task} 
+                          isActive={activeTask?.id === task.id} 
+                          onEdit={handleEditTask}
+                        />
                       </motion.div>
                     ))}
                   </div>
@@ -76,7 +101,11 @@ const TaskList = () => {
                         exit={{ opacity: 0, height: 0 }}
                         className="overflow-hidden"
                       >
-                        <TaskItem task={task} isActive={activeTask?.id === task.id} />
+                        <TaskItem 
+                          task={task} 
+                          isActive={activeTask?.id === task.id}
+                          onEdit={handleEditTask}
+                        />
                       </motion.div>
                     ))}
                   </div>
@@ -98,7 +127,11 @@ const TaskList = () => {
         <Button
           variant="outline"
           className="w-full gap-1"
-          onClick={() => setShowAddTask(!showAddTask)}
+          onClick={() => {
+            setShowAddTask(!showAddTask);
+            setEditingTask(null);
+          }}
+          disabled={!!editingTask}
         >
           <Plus className="h-4 w-4" />
           {showAddTask ? "Cancel" : "Add Task"}

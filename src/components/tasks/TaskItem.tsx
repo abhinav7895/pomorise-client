@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trash2, Clock, CheckCircle2, Circle, MoreHorizontal, Play, Loader2, CircleCheck } from 'lucide-react';
+import { Trash2, Clock, CheckCircle2, Circle, MoreHorizontal, Play, Loader2, CircleCheck, Pencil } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useTasks } from '@/context/TaskContext';
@@ -18,9 +18,10 @@ interface TaskItemProps {
   task: Task;
   isActive: boolean;
   compact?: boolean;
+  onEdit?: (task: Task) => void;
 }
 
-const TaskItem = ({ task, isActive, compact = false }: TaskItemProps) => {
+const TaskItem = ({ task, isActive, compact = false, onEdit }: TaskItemProps) => {
   const {
     completeTask,
     deleteTask,
@@ -35,6 +36,13 @@ const TaskItem = ({ task, isActive, compact = false }: TaskItemProps) => {
   const handleDeleteTask = (e: React.MouseEvent) => {
     e.stopPropagation();
     deleteTask(task.id);
+  };
+
+  const handleEditTask = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onEdit) {
+      onEdit(task);
+    }
   };
 
   const {
@@ -94,7 +102,7 @@ const TaskItem = ({ task, isActive, compact = false }: TaskItemProps) => {
           </div>
         </div>
 
-        <div className="flex items-center space-x-2 ml-auto flex-shrink-0"> {/* Added flex-shrink-0 to prevent button compression */}
+        <div className="flex items-center space-x-2 ml-auto flex-shrink-0">
           {!task.isCompleted && (
             <Button
               variant={"outline"}
@@ -120,10 +128,28 @@ const TaskItem = ({ task, isActive, compact = false }: TaskItemProps) => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={handleToggleComplete}>
-                {task.isCompleted ? "Mark as Incomplete" : "Mark as Complete"}
+              <DropdownMenuItem onClick={handleEditTask}>
+                <Pencil className="w-4 h-4 mr-2" />
+                Edit
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleDeleteTask}>
+              <DropdownMenuItem onClick={handleToggleComplete}>
+                {task.isCompleted ? (
+                  <>
+                    <Circle className="w-4 h-4 mr-2" />
+                    Mark as Incomplete
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle2 className="w-4 h-4 mr-2" />
+                    Mark as Complete
+                  </>
+                )}
+              </DropdownMenuItem>
+              <DropdownMenuItem 
+                onClick={handleDeleteTask}
+                className="text-red-600 focus:text-red-600 dark:text-red-400 dark:focus:text-red-400"
+              >
+                <Trash2 className="w-4 h-4 mr-2" />
                 Delete
               </DropdownMenuItem>
             </DropdownMenuContent>

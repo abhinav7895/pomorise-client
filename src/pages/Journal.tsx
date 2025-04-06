@@ -3,7 +3,7 @@ import { JournalEntry, useJournals } from '@/context/JournalContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Archive, Trash2, Plus, ArrowLeft } from 'lucide-react';
+import { Archive, Trash2, Plus, ArrowLeft, Edit, Save } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format } from 'date-fns';
 import SEO from '@/components/SEO';
@@ -12,12 +12,15 @@ import 'react-quill/dist/quill.snow.css';
 import { useLocation } from 'react-router-dom';
 
 const Journal: React.FC = () => {
-  const { journals, addJournal, deleteJournal, archiveJournal } = useJournals();
+  const { journals, addJournal, updateJournal, deleteJournal, archiveJournal } = useJournals();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [isAdding, setIsAdding] = useState(false);
   const [selectedJournal, setSelectedJournal] = useState<JournalEntry | null>(null);
   const [showArchived, setShowArchived] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editTitle, setEditTitle] = useState('');
+  const [editContent, setEditContent] = useState('');
   const location = useLocation();
 
   useEffect(() => {
@@ -37,6 +40,32 @@ const Journal: React.FC = () => {
       setContent('');
       setIsAdding(false);
     }
+  };
+
+  const handleEditSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (selectedJournal && editTitle.trim() && editContent.trim()) {
+      updateJournal(selectedJournal.id, {
+        title: editTitle,
+        content: editContent
+      });
+      setIsEditing(false);
+      setSelectedJournal({
+        ...selectedJournal,
+        title: editTitle,
+        content: editContent
+      });
+    }
+  };
+
+  const handleStartEditing = (journal: JournalEntry) => {
+    setEditTitle(journal.title);
+    setEditContent(journal.content);
+    setIsEditing(true);
+  };
+
+  const handleCancelEditing = () => {
+    setIsEditing(false);
   };
 
   const quillModules = {
@@ -210,7 +239,10 @@ const Journal: React.FC = () => {
                     <div>
                       <Button
                         variant="ghost"
-                        onClick={() => setSelectedJournal(null)}
+                        onClick={() => {
+                          setSelectedJournal(null);
+                          setIsEditing(false);
+                        }}
                         className="flex items-center gap-2 border border-dashed"
                       >
                         <ArrowLeft className="h-4 w-4" />
@@ -219,6 +251,16 @@ const Journal: React.FC = () => {
                     </div>
 
                     <div className="flex gap-2">
+                      {!isEditing && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleStartEditing(selectedJournal)}
+                        >
+                          <Edit className="h-4 w-4 sm:mr-2" />
+                          <span className="hidden sm:block">Edit</span>
+                        </Button>
+                      )}
                       <Button
                         variant="outline"
                         size="sm"
@@ -243,19 +285,55 @@ const Journal: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="mb-2">
-                    <span>{selectedJournal.title}</span>
-                  </div>
+                  {isEditing ? (
+                    <Input
+                      value={editTitle}
+                      onChange={(e) => setEditTitle(e.target.value)}
+                      className="w-full"
+                    />
+                  ) : (
+                    <div className="mb-2">
+                      <span>{selectedJournal.title}</span>
+                    </div>
+                  )}
                 </CardTitle>
                 <p className="text-sm text-muted-foreground">
                   {format(new Date(selectedJournal.createdAt), 'MMMM d, yyyy HH:mm')}
+                  {selectedJournal.updatedAt !== selectedJournal.createdAt && (
+                    <span> • Edited: {format(new Date(selectedJournal.updatedAt), 'MMMM d, yyyy HH:mm')}</span>
+                  )}
                 </p>
               </CardHeader>
               <CardContent className="p-0 sm:p-4">
-                <div
-                  className="quill-content border-t pt-4 sm:bg-gray-900/70 sm:p-4 font-mono sm:border border-dashed text-foreground"
-                  dangerouslySetInnerHTML={{ __html: selectedJournal.content }}
-                />
+                {isEditing ? (
+                  <form onSubmit={handleEditSubmit} className="space-y-4">
+                    <ReactQuill
+                      value={editContent}
+                      onChange={setEditContent}
+                      modules={quillModules}
+                      formats={quillFormats}
+                      className="bg-background border border-dashed"
+                      theme="snow"
+                    />
+                    <div className="flex gap-2">
+                      <Button type="submit" className="gap-2">
+                        <Save className="h-4 w-4" />
+                        Save Changes
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={handleCancelEditing}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </form>
+                ) : (
+                  <div
+                    className="quill-content border-t pt-4 sm:bg-gray-900/70 sm:p-4 font-mono sm:border border-dashed text-foreground"
+                    dangerouslySetInnerHTML={{ __html: selectedJournal.content }}
+                  />
+                )}
               </CardContent>
             </Card>
           </motion.div>
