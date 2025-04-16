@@ -21,6 +21,7 @@ export default {
     extend: {
       fontFamily: {
         'geist-mono': ['"Geist Mono"', 'monospace'],
+        'grotesk': ['"Space Grotesk"', 'serif'],
       },
       colors: {
         border: "hsl(var(--border))",

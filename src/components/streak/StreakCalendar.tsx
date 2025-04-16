@@ -6,12 +6,10 @@ import { Badge } from '@/components/ui/badge';
 import { Trophy, Calendar as CalendarIcon, Flame, Award, Check, ChevronRight, ChevronLeft, Zap, Target, TrendingUp } from 'lucide-react';
 import { loadStreakData, getCalendarData } from '@/utils/streakTracker';
 import { motion } from 'framer-motion';
-import Confetti from 'react-confetti';
 import { format, subMonths, addMonths, startOfMonth } from 'date-fns';
 
 const StreakCalendar = () => {
   const [streakData, setStreakData] = useState(loadStreakData());
-  const [showConfetti, setShowConfetti] = useState(false);
   const [celebratedMilestone, setCelebratedMilestone] = useState<number | null>(null);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [activeView, setActiveView] = useState<'calendar' | 'stats'>('calendar');
@@ -49,11 +47,6 @@ const StreakCalendar = () => {
     if (milestones.includes(streakData.currentStreak) && 
         streakData.currentStreak !== celebratedMilestone) {
       setCelebratedMilestone(streakData.currentStreak);
-      setShowConfetti(true);
-      
-      setTimeout(() => {
-        setShowConfetti(false);
-      }, 6000);
     }
   }, [streakData, celebratedMilestone]);
   
@@ -110,16 +103,7 @@ const StreakCalendar = () => {
       </CardHeader>
       
       <CardContent className="pt-4">
-        {showConfetti && (
-          <Confetti
-            width={windowSize.width}
-            height={windowSize.height}
-            recycle={false}
-            numberOfPieces={300}
-            tweenDuration={8000}
-          />
-        )}
-        
+
         <div className="grid grid-cols-3 gap-3 mb-6">
           <motion.div 
             className="col-span-1 bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/20 rounded-xl p-4 flex flex-col items-center"
@@ -170,7 +154,7 @@ const StreakCalendar = () => {
           </motion.div>
         </div>
         
-        {celebratedMilestone && showConfetti && (
+        {celebratedMilestone  && (
           <motion.div 
             className="mb-6 p-4 rounded-lg bg-gradient-to-r from-primary/20 to-amber-500/20 text-center shadow-sm"
             initial={{ opacity: 0, scale: 0.8 }}

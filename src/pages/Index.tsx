@@ -4,6 +4,7 @@ import TaskList from '@/components/tasks/TaskList';
 import JournalList from '@/components/journal/JournalList';
 import StreakCalendar from '@/components/streak/StreakCalendar';
 import HabitWidget from '@/components/habits/HabitWidget';
+
 import { requestNotificationPermission } from '@/utils/notifications';
 import { registerServiceWorker } from '@/utils/pwaUtils';
 import { Button } from '@/components/ui/button';
@@ -12,6 +13,7 @@ import { Link } from 'react-router-dom';
 import SEO from '@/components/SEO';
 import { useTimer } from '@/context/TimerContext';
 import { cn } from '@/lib/utils';
+import TimeBasedGreeting from '@/components/TimeBasedGreetings';
 
 const Index = () => {
   const { timerMode } = useTimer();
@@ -33,7 +35,6 @@ const Index = () => {
     }
   };
 
-
   return (
     <>
       <SEO
@@ -49,6 +50,8 @@ const Index = () => {
           "bg-[var(--timer-bg)]"
         )}
       >
+        <TimeBasedGreeting />
+        
         <div className="w-full">
           <Timer />
         </div>
