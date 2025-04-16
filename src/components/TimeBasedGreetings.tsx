@@ -80,7 +80,7 @@ const TimeBasedGreeting = () => {
   }, []);
 
   return (
-    <div className="w-full font-grotesk text-gray-600 text-left sm:py-2 text-3xl md:text-4xl lg:text-5xl font-medium">
+    <div className="w-full font-grotesk text-gray-400 text-left sm:py-2 text-3xl md:text-4xl lg:text-5xl font-medium">
       {greeting}
     </div>
   );
