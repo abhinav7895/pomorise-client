@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useTasks } from '@/context/TaskContext';
 import { useHabits } from '@/context/HabitContext';
+import { useJournals } from '@/context/JournalContext';
 import { toast } from 'sonner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Brain, Lightbulb, Star, Check, AlertTriangle, Loader2 } from 'lucide-react';
@@ -12,6 +13,7 @@ import SEO from '@/components/SEO';
 const Insights: React.FC = () => {
   const { tasks } = useTasks();
   const { habits } = useHabits();
+  const { journals } = useJournals();
 
   const [loading, setLoading] = useState(false);
   const [insights, setInsights] = useState<{
@@ -45,14 +47,14 @@ const Insights: React.FC = () => {
     return `${minutes}m ${seconds}s`;
   };
 
-  const canRefresh = () => {
+  const canRefresh = useCallback(() => {
     if (!lastFetched) return true;
     const now = new Date().getTime();
     const lastFetchTime = new Date(lastFetched).getTime();
     return now - lastFetchTime >= REFRESH_COOLDOWN;
-  };
+  }, [lastFetched, REFRESH_COOLDOWN]);
 
-  const updateTimeUntilRefresh = () => {
+  const updateTimeUntilRefresh = useCallback(() => {
     if (!lastFetched) {
       setTimeUntilNextRefresh(null);
       return;
@@ -67,9 +69,9 @@ const Insights: React.FC = () => {
     } else {
       setTimeUntilNextRefresh(null);
     }
-  };
+  }, [lastFetched, REFRESH_COOLDOWN]);
 
-  const fetchInsights = async () => {
+  const fetchInsights = useCallback(async () => {
     if (!canRefresh()) {
       toast.info(`Please wait ${formatTimeRemaining(timeUntilNextRefresh || 0)} before refreshing again.`, {
         description: 'Refresh Cooldown',
@@ -81,7 +83,7 @@ const Insights: React.FC = () => {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/insights`,
-        { habits, tasks },
+        { habits, tasks, journals },
         { headers: { 'Content-Type': 'application/json' } }
       );
 
@@ -103,7 +105,7 @@ const Insights: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [habits, tasks, journals, timeUntilNextRefresh, canRefresh]);
 
   useEffect(() => {
     if (!insights) {
@@ -115,7 +117,7 @@ const Insights: React.FC = () => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [insights, lastFetched]);
+  }, [insights, lastFetched, fetchInsights, updateTimeUntilRefresh]);
 
   return (
     <>
