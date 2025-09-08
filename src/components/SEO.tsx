@@ -22,11 +22,6 @@ const SEO: React.FC<SEOProps> = ({
       {/* Standard meta tags */}
       <title>{title}</title>
 
-      {/* Google Site Verification */}
-      <meta
-        name="google-site-verification"
-        content="6UE73xGLXkLeeW8-HDy9Z80IAEzA7h4yAzQzh7KEKOY"
-      />
 
       <meta name="description" content={description} />
       {keywords && <meta name="keywords" content={keywords} />}
