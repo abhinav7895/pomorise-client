@@ -7,7 +7,7 @@
   <!-- Homepage -->
   <url>
     <loc>https://pomorise.vercel.app/</loc>
-    <lastmod>2025-09-08</lastmod>
+    <lastmod>2025-09-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -15,7 +15,7 @@
   <!-- Landing Page -->
   <url>
     <loc>https://pomorise.vercel.app/landing</loc>
-    <lastmod>2025-09-08</lastmod>
+    <lastmod>2025-09-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -23,7 +23,7 @@
   <!-- About Page -->
   <url>
     <loc>https://pomorise.vercel.app/about</loc>
-    <lastmod>2025-09-08</lastmod>
+    <lastmod>2025-09-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -31,7 +31,7 @@
   <!-- Habits Page -->
   <url>
     <loc>https://pomorise.vercel.app/habits</loc>
-    <lastmod>2025-09-08</lastmod>
+    <lastmod>2025-09-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -39,7 +39,7 @@
   <!-- Tasks Page -->
   <url>
     <loc>https://pomorise.vercel.app/tasks</loc>
-    <lastmod>2025-09-08</lastmod>
+    <lastmod>2025-09-13</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
@@ -47,7 +47,7 @@
   <!-- Journal Page -->
   <url>
     <loc>https://pomorise.vercel.app/journal</loc>
-    <lastmod>2025-09-08</lastmod>
+    <lastmod>2025-09-13</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -55,7 +55,7 @@
   <!-- Insights Page -->
   <url>
     <loc>https://pomorise.vercel.app/insights</loc>
-    <lastmod>2025-09-08</lastmod>
+    <lastmod>2025-09-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -63,7 +63,7 @@
   <!-- Settings Page -->
   <url>
     <loc>https://pomorise.vercel.app/settings</loc>
-    <lastmod>2025-09-08</lastmod>
+    <lastmod>2025-09-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
