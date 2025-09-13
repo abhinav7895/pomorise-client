@@ -33,6 +33,7 @@ const SEO: React.FC<SEOProps> = ({
       <meta property="og:type" content="website" />
       <meta property="og:image" content={ogImage || defaultImage} />
       <meta property="og:url" content={canonicalUrl} />
+      <meta property="og:site_name" content={"Pomorise - Pomodoro Timer"} />
 
       {/* Twitter Card tags */}
       <meta name="twitter:card" content="summary_large_image" />
